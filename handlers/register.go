@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// LoginHandler handles the login request
-func LoginHandler(c *gin.Context) {
+// RegisterHandler handles an user's registration
+func RegisterHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "pong",
 	})

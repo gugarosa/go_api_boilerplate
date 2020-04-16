@@ -1,15 +1,20 @@
 package main
 
 import (
-	"vivere_api/handlers"
+	"vivere_api/config"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	// Initialize database
+	config.ConfigureDatabase("mongodb://localhost:27017")
+
+	// Initialize application
 	r := gin.Default()
 
-	r.GET("/get", handlers.LoginHandle)
+	// Adding router
+	config.ConfigureRouter(r)
 
 	r.Run()
 }
