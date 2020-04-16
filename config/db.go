@@ -4,15 +4,15 @@ import (
 	"context"
 	"log"
 	"time"
+	"vivere_api/db"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 // ConfigureDatabase starts a MongoDB service on desired URL
-func ConfigureDatabase(url string) {
+func ConfigureDatabase(url string, database string) {
 	// Creating a new MongoDB client
 	client, err := mongo.NewClient(options.Client().ApplyURI(url))
 
@@ -34,9 +34,10 @@ func ConfigureDatabase(url string) {
 	}
 
 	// Retrieving the database
-	db, _ := client.ListDatabaseNames(ctx, bson.M{})
+	_db := client.Database(database)
 
-	log.Println(db)
+	// Adding desired collections
+	db.UserCollection(_db)
 
 	return
 

@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// Initialize database
-	config.ConfigureDatabase("mongodb://localhost:27017")
+	config.ConfigureDatabase("mongodb://localhost:27017", "vivere")
 
 	// Initialize application
 	r := gin.Default()
