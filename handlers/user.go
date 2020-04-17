@@ -5,13 +5,14 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"vivere_api/middleware"
 	"vivere_api/models"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Global variable for the user collection
+// Global variables for the UserHandler
 var collection *mongo.Collection
 
 // UserCollection expects a MongoDB database as parameter and sets in the scope
@@ -26,8 +27,18 @@ func AddUser(c *gin.Context) {
 	// Creating an user variable
 	var user models.User
 
-	// Binding the request JSON
-	c.BindJSON(&user)
+	// Trying to bind the request
+	berr := middleware.BindRequest(c, &user)
+
+	// Trying to validate the request
+	verr := middleware.ValidateRequest(c, &user)
+
+	// Checking if there is any error on request binding or validation
+	if berr != nil || verr != nil {
+		log.Println(berr, verr)
+
+		return
+	}
 
 	// Declaring new properties
 	user.Token = ""

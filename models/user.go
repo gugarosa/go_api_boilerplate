@@ -9,9 +9,9 @@ import (
 // User model
 type User struct {
 	ID        primitive.ObjectID `bson:"_id,omitempty"`
-	Email     string             `bson:"email,omitempty" binding:"required"`
-	Password  string             `bson:"password,omitempty"`
-	Token     string             `bson:"token,omitempty"`
-	CreatedAt time.Time          `bson:"created_at,omitempty"`
-	UpdatedAt time.Time          `bson:"updated_at, omitempty"`
+	Email     string             `bson:"email" validate:"required,email"`
+	Password  string             `bson:"password"`
+	Token     string             `bson:"token"`
+	CreatedAt time.Time          `bson:"created_at"`
+	UpdatedAt time.Time          `bson:"updated_aty"`
 }
