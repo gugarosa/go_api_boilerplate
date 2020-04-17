@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"vivere_api/middleware"
 	"vivere_api/models"
+	"vivere_api/validators"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -28,10 +28,10 @@ func AddUser(c *gin.Context) {
 	var user models.User
 
 	// Trying to bind the request
-	berr := middleware.BindRequest(c, &user)
+	berr := validators.BindRequest(c, &user)
 
 	// Trying to validate the request
-	verr := middleware.ValidateRequest(c, &user)
+	verr := validators.ValidateRequest(c, &user)
 
 	// Checking if there is any error on request binding or validation
 	if berr != nil || verr != nil {

@@ -1,4 +1,4 @@
-package middleware
+package validators
 
 import (
 	"net/http"
