@@ -11,10 +11,13 @@ import (
 // the desired API routes
 func ConfigureRouter(r *gin.Engine) {
 	// Login
-	r.GET("/get", handlers.LoginHandler)
+	r.GET("/login", handlers.LoginHandler)
 
 	// Registration
 	r.POST("/register", handlers.RegisterHandler)
+
+	// Users
+	r.POST("/user", handlers.AddUser)
 
 	// Non-existing
 	r.NoRoute(func(c *gin.Context) {

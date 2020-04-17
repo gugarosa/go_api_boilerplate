@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 	"time"
-	"vivere_api/db"
+	"vivere_api/handlers"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -37,7 +37,7 @@ func ConfigureDatabase(url string, database string) {
 	_db := client.Database(database)
 
 	// Adding desired collections
-	db.UserCollection(_db)
+	handlers.UserCollection(_db)
 
 	return
 
