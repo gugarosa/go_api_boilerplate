@@ -14,10 +14,8 @@ func BindRequest(c *gin.Context, model interface{}) error {
 			"status":  http.StatusBadRequest,
 			"message": err.Error(),
 		})
-
 		return err
 	}
-
 	return nil
 }
 
@@ -28,9 +26,7 @@ func ValidateRequest(c *gin.Context, model interface{}) error {
 			"status": http.StatusBadRequest,
 			"error":  err.Error(),
 		})
-
 		return err
 	}
-
 	return nil
 }

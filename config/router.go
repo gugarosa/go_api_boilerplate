@@ -14,10 +14,10 @@ func ConfigureRouter(r *gin.Engine) {
 	r.GET("/login", handlers.LoginHandler)
 
 	// Registration
-	r.POST("/register", handlers.RegisterHandler)
+	r.POST("/register", handlers.RegisterNewUser)
 
-	// Users
-	r.POST("/user", handlers.AddUser)
+	// // Users
+	// r.POST("/user", handlers.AddUser)
 
 	// Non-existing
 	r.NoRoute(func(c *gin.Context) {
@@ -25,7 +25,6 @@ func ConfigureRouter(r *gin.Engine) {
 			"status":  404,
 			"message": "This route is not available.",
 		})
-
 		return
 	})
 }

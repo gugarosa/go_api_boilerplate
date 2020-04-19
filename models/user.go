@@ -13,5 +13,5 @@ type User struct {
 	Password  string             `bson:"password"`
 	Token     string             `bson:"token"`
 	CreatedAt time.Time          `bson:"created_at"`
-	UpdatedAt time.Time          `bson:"updated_aty"`
+	UpdatedAt time.Time          `bson:"updated_at"`
 }

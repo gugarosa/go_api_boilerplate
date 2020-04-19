@@ -37,7 +37,7 @@ func ConfigureDatabase(url string, database string) {
 	_db := client.Database(database)
 
 	// Adding desired collections
-	handlers.UserCollection(_db)
+	handlers.SetCollections(_db)
 
 	return
 
