@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // RegisterNewUser expects an input JSON containing the following keys:
@@ -38,7 +39,11 @@ func RegisterNewUser(c *gin.Context) {
 		return
 	}
 
+	// Hashing and salting the user password
+	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+
 	// Declaring new properties
+	user.Password = string(hashPassword)
 	user.Token = ""
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
