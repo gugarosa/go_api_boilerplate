@@ -1,9 +1,10 @@
-package db
+package core
 
 import (
 	"context"
 	"log"
 	"time"
+	"vivere_api/db"
 	"vivere_api/utils"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -30,13 +31,13 @@ func InitializeDatabase(url string, database string) {
 	utils.HandleFatalError(err)
 
 	// If no error has occured, just log that the client has been connected
-	log.Println("MongoDB client connected.")
+	log.Println(utils.ClientConnected)
 
 	// Retrieving the database
 	_db := client.Database(database)
 
 	// Adding desired collections
-	SetCollections(_db)
+	db.SetCollections(_db)
 
 	return
 }

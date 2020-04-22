@@ -10,10 +10,10 @@ func HandleError(errs ...error) bool {
 		// Check if it exists, logs it and return as `true`
 		if err != nil {
 			log.Println(err)
-			return true
+			return false
 		}
 	}
-	return false
+	return true
 }
 
 // HandleFatalError expects an dynamic number of error arguments,
@@ -26,5 +26,5 @@ func HandleFatalError(errs ...error) bool {
 			log.Fatal(err)
 		}
 	}
-	return false
+	return true
 }
