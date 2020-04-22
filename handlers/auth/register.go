@@ -21,12 +21,13 @@ func RegisterNewUser(c *gin.Context) {
 	var user models.User
 
 	// Validating the incoming request
+	// If it return as false, an error might occurred
 	if !handlers.ValidateIncomingRequest(c, &user) {
 		return
 	}
 
 	// Checking if user is valid
-	// Note that we use `not` as this block expects `true` when there is no user
+	// Note that we use the comparison as `true` as this block expects `false` when there is no user
 	uniqueErr := db.UserCollection.FindOne(context.Background(), bson.M{"email": user.Email}).Decode(&models.User{})
 	if utils.HandleError(uniqueErr) {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -37,10 +38,10 @@ func RegisterNewUser(c *gin.Context) {
 	}
 
 	// Hashing and salting the user password
-	hashPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 
 	// Declaring new properties
-	user.Password = string(hashPassword)
+	user.Password = string(hashedPassword)
 	user.Token = ""
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
