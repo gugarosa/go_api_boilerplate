@@ -15,3 +15,16 @@ func HandleError(errs ...error) bool {
 	}
 	return false
 }
+
+// HandleFatalError expects an dynamic number of error arguments,
+// logs and exits if a fatal error has happened
+func HandleFatalError(errs ...error) bool {
+	// For every possible error
+	for _, err := range errs {
+		// Check if it exists, logs it and exits the system
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	return false
+}
