@@ -31,7 +31,7 @@ func InitializeDatabase(url string, database string) {
 	utils.HandleFatalError(err)
 
 	// If no error has occured, just log that the client has been connected
-	log.Println(utils.ClientConnected)
+	log.Println(utils.DatabaseClientConnected)
 
 	// Retrieving the database
 	_db := client.Database(database)

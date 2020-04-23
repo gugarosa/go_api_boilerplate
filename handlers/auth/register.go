@@ -1,13 +1,10 @@
 package auth
 
 import (
-	"context"
-	"net/http"
 	"time"
 	"vivere_api/db"
 	"vivere_api/handlers"
 	"vivere_api/models"
-	"vivere_api/utils"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -26,14 +23,8 @@ func RegisterNewUser(c *gin.Context) {
 		return
 	}
 
-	// Checking if user is valid
-	// Note that we use the comparison as `true` as this block expects `false` when there is no user
-	uniqueErr := db.UserCollection.FindOne(context.Background(), bson.M{"email": user.Email}).Decode(&models.User{})
-	if utils.HandleError(uniqueErr) {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": "User already exists.",
-		})
+	// Finding a model in collection with the same inputted e-mail
+	if !db.FindOne(c, db.UserCollection, bson.M{"email": user.Email}, &models.User{}) {
 		return
 	}
 
@@ -46,19 +37,10 @@ func RegisterNewUser(c *gin.Context) {
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 
-	// Inserting model into collection and checking an insertion error
-	_, insertErr := db.UserCollection.InsertOne(context.Background(), user)
-	if !utils.HandleError(insertErr) {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": "User could not be added.",
-		})
+	// Inserting model into collection and checking for an insertion error
+	if !db.InsertOne(c, db.UserCollection, user) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
-		"status":  http.StatusCreated,
-		"message": "User successfully created.",
-	})
 	return
 }

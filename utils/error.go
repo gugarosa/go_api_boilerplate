@@ -13,6 +13,7 @@ func HandleError(errs ...error) bool {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -26,5 +27,6 @@ func HandleFatalError(errs ...error) bool {
 			log.Fatal(err)
 		}
 	}
+
 	return true
 }

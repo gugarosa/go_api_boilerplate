@@ -16,6 +16,7 @@ func BindRequest(c *gin.Context, model interface{}) error {
 		})
 		return err
 	}
+
 	return nil
 }
 
@@ -28,5 +29,6 @@ func ValidateRequest(c *gin.Context, model interface{}) error {
 		})
 		return err
 	}
+
 	return nil
 }
