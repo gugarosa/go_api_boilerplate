@@ -1,10 +1,12 @@
 package auth
 
 import (
+	"net/http"
 	"time"
 	"vivere_api/db"
 	"vivere_api/handlers"
 	"vivere_api/models"
+	"vivere_api/utils"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -17,14 +19,19 @@ func RegisterNewUser(c *gin.Context) {
 	// Creating an user variable
 	var user models.User
 
-	// Validating the incoming request
+	// Binding and validating the incoming request
 	// If it return as false, an error might occurred
-	if !handlers.ValidateIncomingRequest(c, &user) {
+	if !handlers.BindAndValidateIncomingRequest(c, &user) {
 		return
 	}
 
 	// Finding a model in collection with the same inputted e-mail
-	if !db.FindOne(c, db.UserCollection, bson.M{"email": user.Email}, &models.User{}) {
+	if db.FindOne(c, db.UserCollection, bson.M{"email": user.Email}, &models.User{}) {
+		// If a model has been found, return a JSON indicating that user already exists
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status":  http.StatusInternalServerError,
+			"message": utils.UserAlreadyExists,
+		})
 		return
 	}
 

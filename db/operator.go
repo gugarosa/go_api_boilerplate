@@ -14,15 +14,10 @@ import (
 // a single document into the database
 func FindOne(c *gin.Context, collection *mongo.Collection, filter bson.M, model interface{}) bool {
 	// Tries to find model in the database
-	uniqueErr := collection.FindOne(c, filter).Decode(model)
+	findErr := collection.FindOne(c, filter).Decode(model)
 
 	// Handles if an error has occured
-	// Note that we use the comparison as `true` as this block expects `false` when there is no model
-	if utils.HandleError(uniqueErr) {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": utils.DatabaseAlreadyExists,
-		})
+	if !utils.HandleError(findErr) {
 		return false
 	}
 

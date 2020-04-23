@@ -2,13 +2,54 @@ package auth
 
 import (
 	"net/http"
+	"vivere_api/db"
+	"vivere_api/handlers"
+	"vivere_api/models"
+	"vivere_api/utils"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
+	"golang.org/x/crypto/bcrypt"
 )
 
-// LoginHandler handles the login request
-func LoginHandler(c *gin.Context) {
+// LogNewUser expects an input JSON containing the following keys:
+// (`email`, `password`)
+func LogNewUser(c *gin.Context) {
+	// Creating an input and database user variables
+	var inputUser, dbUser models.User
+
+	// Binding the incoming request
+	// If it return as false, an error might occurred
+	if !handlers.BindIncomingRequest(c, &inputUser) {
+		return
+	}
+
+	// Finding a model in collection with the same inputted e-mail
+	if !db.FindOne(c, db.UserCollection, bson.M{"email": inputUser.Email}, &dbUser) {
+		// If a model has not been found, return a JSON indicating that user does not exists
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status":  http.StatusUnauthorized,
+			"message": utils.LoginError,
+		})
+		return
+	}
+
+	// Comparing if both passwords are the same
+	passwordErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(inputUser.Password))
+
+	// Handles if an error has occured
+	if !utils.HandleError(passwordErr) {
+		// If yes, returns a JSON with an error status
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status":  http.StatusUnauthorized,
+			"message": utils.LoginError,
+		})
+		return
+	}
+
+	// If not, returns a JSON with a success status
 	c.JSON(http.StatusOK, gin.H{
-		"message": "pong",
+		"status": http.StatusOK,
+		"token":  "token",
 	})
 }
