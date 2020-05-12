@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"vivere_api/db"
 	"vivere_api/handlers"
+	"vivere_api/middleware"
 	"vivere_api/models"
 	"vivere_api/utils"
 
@@ -47,9 +48,22 @@ func LogNewUser(c *gin.Context) {
 		return
 	}
 
+	//
+	token, tokenErr := middleware.CreateNewToken(dbUser.ID)
+
+	// Handles if an error has occured
+	if !utils.HandleError(tokenErr) {
+		// If yes, returns a JSON with an error status
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status":  http.StatusUnauthorized,
+			"message": utils.LoginError,
+		})
+		return
+	}
+
 	// If not, returns a JSON with a success status
 	c.JSON(http.StatusOK, gin.H{
 		"status": http.StatusOK,
-		"token":  "token",
+		"token":  token,
 	})
 }
