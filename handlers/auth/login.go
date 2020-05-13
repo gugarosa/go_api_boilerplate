@@ -61,9 +61,22 @@ func LogNewUser(c *gin.Context) {
 		return
 	}
 
+	saveErr := middleware.CreateAuth(dbUser.ID, token)
+
+	// Handles if an error has occured
+	if !utils.HandleError(saveErr) {
+		// If yes, returns a JSON with an error status
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status":  http.StatusUnauthorized,
+			"message": utils.LoginError,
+		})
+		return
+	}
+
 	// If not, returns a JSON with a success status
 	c.JSON(http.StatusOK, gin.H{
-		"status": http.StatusOK,
-		"token":  token,
+		"status":        http.StatusOK,
+		"access_token":  token.AccessToken,
+		"refresh_token": token.RefreshToken,
 	})
 }
