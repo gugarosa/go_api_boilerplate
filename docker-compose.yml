@@ -1,15 +1,19 @@
 version: '3.8'
 services:
     db:
-        image: 'mongo'
+        image: mongo
+        container_name: db
         ports:
-            - '27017:27017'
+            - 27017:27017
         environment:
-            MONGO_INITDB_DATABASE: vivere
+            MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+            MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
+            MONGO_INITDB_DATABASE: ${DB_NAME}
     api:
         build: '.'
+        container_name: api
         links:
-            - 'db'
+            - db
         depends_on: 
             - db
         ports:

@@ -13,10 +13,16 @@ COPY . .
 RUN go mod download
 
 #
-RUN go get github.com/codegangsta/gin
+RUN go build app.go
 
 #
-EXPOSE 3001
+CMD ["./app"]
+
+#
+# RUN go get github.com/codegangsta/gin
+
+#
+# EXPOSE 3001
 
 # 
-CMD ["gin", "--port", "8080", "run", "app.go"]
+# CMD ["gin", "--port", "8080", "run", "app.go"]

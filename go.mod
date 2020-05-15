@@ -10,6 +10,7 @@ require (
 	github.com/gin-gonic/gin v1.6.2
 	github.com/go-playground/validator/v10 v10.2.0
 	github.com/go-redis/redis/v7 v7.2.0
+	github.com/joho/godotenv v1.3.0
 	github.com/mattn/go-shellwords v1.0.10 // indirect
 	github.com/rogpeppe/godef v1.1.2 // indirect
 	github.com/twinj/uuid v1.0.0

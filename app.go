@@ -1,19 +1,41 @@
 package main
 
 import (
+	"fmt"
+	"log"
+	"os"
 	"vivere_api/core"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
+func init() {
+	// Loading environment file
+	err := godotenv.Load()
+
+	// If environment file could not be loaded
+	if err != nil {
+		// Invokes a fatal error
+		log.Fatal("The .env file could not be found.")
+	}
+}
+
 func main() {
+	// Getting arguments from environment file
+	mode := os.Getenv("MODE")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+	dbName := os.Getenv("DB_NAME")
+
 	// Initializing the database with desired arguments
-	core.InitializeDatabase("mongodb://0.0.0.0:27017", "vivere")
+	core.InitializeDatabase(fmt.Sprintf("mongodb://%s:%s@db", dbUser, dbPass), dbName)
 
 	//
 	// middleware.InitializeRedis()
 
-	// Initializing the application
+	// Setting application mode and initializing it
+	gin.SetMode(mode)
 	r := gin.Default()
 
 	// Adding the router to the application
