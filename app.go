@@ -27,9 +27,10 @@ func main() {
 	dbUser := os.Getenv("DB_USER")
 	dbPass := os.Getenv("DB_PASS")
 	dbName := os.Getenv("DB_NAME")
+	dbPort := os.Getenv("DB_PORT")
 
 	// Initializing the database with desired arguments
-	core.InitializeDatabase(fmt.Sprintf("mongodb://%s:%s@db", dbUser, dbPass), dbName)
+	core.InitializeDatabase(fmt.Sprintf("mongodb://%s:%s@db:%s", dbUser, dbPass, dbPort), dbName)
 
 	//
 	// middleware.InitializeRedis()
