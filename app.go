@@ -2,17 +2,16 @@ package main
 
 import (
 	"vivere_api/core"
-	"vivere_api/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	// Initializing the database with desired arguments
-	core.InitializeDatabase("mongodb://localhost:27017", "vivere")
+	core.InitializeDatabase("mongodb://0.0.0.0:27017", "vivere")
 
 	//
-	middleware.InitializeRedis()
+	// middleware.InitializeRedis()
 
 	// Initializing the application
 	r := gin.Default()
