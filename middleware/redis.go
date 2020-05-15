@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"os"
 	"time"
 	"vivere_api/models"
@@ -16,12 +17,11 @@ var client *redis.Client
 // InitializeRedis ...
 func InitializeRedis() {
 	//Initializing redis
-	dsn := os.Getenv("REDIS_DSN")
-	if len(dsn) == 0 {
-		dsn = "localhost:6379"
-	}
+	dsn := os.Getenv("REDIS_PORT")
 	client = redis.NewClient(&redis.Options{
-		Addr: dsn, //redis port
+		Addr:     fmt.Sprintf("cache:%s", dsn),
+		Password: os.Getenv("REDIS_PASS"),
+		DB:       0,
 	})
 	_, err := client.Ping().Result()
 	if err != nil {

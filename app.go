@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"vivere_api/core"
+	"vivere_api/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -33,7 +34,7 @@ func main() {
 	core.InitializeDatabase(fmt.Sprintf("mongodb://%s:%s@db:%s", dbUser, dbPass, dbPort), dbName)
 
 	//
-	// middleware.InitializeRedis()
+	middleware.InitializeRedis()
 
 	// Setting application mode and initializing it
 	gin.SetMode(mode)
