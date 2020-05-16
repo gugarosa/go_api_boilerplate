@@ -11,6 +11,8 @@ services:
         container_name: db
         ports:
             - 27017:${DB_PORT}
+        volumes:
+            - ./storage/db:/data/db
         environment:
             MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
             MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
@@ -27,3 +29,4 @@ services:
             - db
         ports:
             - 8080:${PORT}
+        restart: always

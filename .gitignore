@@ -1,5 +1,10 @@
-# Binaries for programs and plugins
+# Database files
+storage
+
+# Configuration files
 .env
+
+# Binaries for programs and plugins
 *.exe
 *.exe~
 *.dll
