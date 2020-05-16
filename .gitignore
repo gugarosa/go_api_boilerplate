@@ -1,5 +1,5 @@
 # Database files
-storage
+storage/
 
 # Configuration files
 .env

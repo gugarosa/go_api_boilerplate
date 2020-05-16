@@ -5,7 +5,10 @@ services:
         container_name: cache
         ports:
             - 6379:${REDIS_PORT}
-        command: redis-server --requirepass ${REDIS_PASS}
+        volumes:
+            - ./storage/redis:/data
+        command: redis-server --requirepass ${REDIS_PASS} --appendonly yes
+        restart: always
     db:
         image: mongo
         container_name: db
