@@ -31,9 +31,9 @@ func HandleFatalError(errs ...error) error {
 	return nil
 }
 
-// SendResponse expects a Gin context, status identifier and message
+// SendStaticResponse expects a Gin context, status identifier and message
 // to create the JSON response
-func SendResponse(c *gin.Context, status int, message string) {
+func SendStaticResponse(c *gin.Context, status int, message string) {
 	c.JSON(status, gin.H{
 		"status":  status,
 		"message": message,

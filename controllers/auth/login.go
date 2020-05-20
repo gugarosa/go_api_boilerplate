@@ -1,69 +1,63 @@
 package auth
 
 import (
+	"net/http"
+	"vivere_api/controllers"
+	"vivere_api/db"
+	"vivere_api/middleware"
+	"vivere_api/models"
+	"vivere_api/utils"
+
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // LogNewUser expects an input JSON containing the following keys:
 // (`email`, `password`)
 func LogNewUser(c *gin.Context) {
-	// // Creating an input and database user variables
-	// var inputUser, dbUser models.User
+	// Creates input and database user variables
+	var inputUser, dbUser models.User
 
-	// // Binding the incoming request
-	// // If it return as false, an error might occurred
-	// if !controllers.BindRequest(c, &inputUser) {
-	// 	return
-	// }
+	// Binds the request
+	bindErr := controllers.BindRequest(c, &inputUser)
+	if bindErr != nil {
+		return
+	}
 
-	// // Finding a model in collection with the same inputted e-mail
-	// if !db.FindOne(c, db.UserCollection, bson.M{"email": inputUser.Email}, &dbUser) {
-	// 	// If a model has not been found, return a JSON indicating that user does not exists
-	// 	c.JSON(http.StatusUnauthorized, gin.H{
-	// 		"status":  http.StatusUnauthorized,
-	// 		"message": utils.LoginError,
-	// 	})
-	// 	return
-	// }
+	// Finds a model in collection with the same inputted e-mail
+	findErr := db.FindOne(db.UserCollection, bson.M{"email": inputUser.Email}, &dbUser)
+	if findErr != nil {
+		utils.SendStaticResponse(c, http.StatusInternalServerError, utils.LoginError)
+		return
+	}
 
-	// // Comparing if both passwords are the same
-	// passwordErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(inputUser.Password))
+	// Compares if both passwords are the same
+	passwordErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(inputUser.Password))
+	if utils.HandleError(passwordErr) != nil {
+		utils.SendStaticResponse(c, http.StatusUnauthorized, utils.LoginError)
+		return
+	}
 
-	// // Handles if an error has occured
-	// if !utils.HandleError(passwordErr) {
-	// 	// If yes, returns a JSON with an error status
-	// 	c.JSON(http.StatusUnauthorized, gin.H{
-	// 		"status":  http.StatusUnauthorized,
-	// 		"message": utils.LoginError,
-	// 	})
-	// 	return
-	// }
+	//
+	token, tokenErr := middleware.CreateNewToken(dbUser.ID)
+	if utils.HandleError(tokenErr) != nil {
+		utils.SendStaticResponse(c, http.StatusUnauthorized, utils.LoginError)
+		return
+	}
 
-	// //
-	// token, tokenErr := middleware.CreateNewToken(dbUser.ID)
+	//
+	setErr := db.SetTokens(dbUser.ID, token)
+	if utils.HandleError(setErr) != nil {
+		utils.SendStaticResponse(c, http.StatusUnauthorized, utils.LoginError)
+		return
+	}
 
-	// // Handles if an error has occured
-	// if !utils.HandleError(tokenErr) {
-	// 	// If yes, returns a JSON with an error status
-	// 	c.JSON(http.StatusUnauthorized, gin.H{
-	// 		"status":  http.StatusUnauthorized,
-	// 		"message": utils.LoginError,
-	// 	})
-	// 	return
-	// }
-
-	// if !db.SetTokens(dbUser.ID, token) {
-	// 	c.JSON(http.StatusUnauthorized, gin.H{
-	// 		"status":  http.StatusUnauthorized,
-	// 		"message": utils.LoginError,
-	// 	})
-	// 	return
-	// }
-
-	// // If not, returns a JSON with a success status
-	// c.JSON(http.StatusOK, gin.H{
-	// 	"status":        http.StatusOK,
-	// 	"access_token":  token.AccessToken,
-	// 	"refresh_token": token.RefreshToken,
-	// })
+	c.JSON(http.StatusOK, gin.H{
+		"status":        http.StatusOK,
+		"access_token":  token.AccessToken,
+		"refresh_token": token.RefreshToken,
+	})
+	return
 }

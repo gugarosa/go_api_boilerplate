@@ -10,7 +10,7 @@ import (
 // BindRequest tries to bind the request,
 // and returns a whether any error has happened or not
 func BindRequest(c *gin.Context, model interface{}) error {
-	// Trying to bind the request
+	// Tries to bind the request
 	bindErr := validators.BindRequest(c, &model)
 
 	return utils.HandleError(bindErr)

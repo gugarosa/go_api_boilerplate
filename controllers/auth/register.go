@@ -19,16 +19,16 @@ func RegisterNewUser(c *gin.Context) {
 	// Creates an user variable
 	var user models.User
 
-	// Binds and validates the incoming request
-	// If it return as false, an error might occurred
-	if !controllers.BindAndValidateRequest(c, &user) {
+	// Binds and validates the request
+	checkErr := controllers.BindAndValidateRequest(c, &user)
+	if checkErr != nil {
 		return
 	}
 
 	// Finds a model in collection with the same inputted e-mail
 	findErr := db.FindOne(db.UserCollection, bson.M{"email": user.Email}, &models.User{})
 	if findErr == nil {
-		utils.SendResponse(c, http.StatusInternalServerError, utils.DatabaseAlreadyExists)
+		utils.SendStaticResponse(c, http.StatusInternalServerError, utils.DatabaseAlreadyExists)
 		return
 	}
 
@@ -44,11 +44,10 @@ func RegisterNewUser(c *gin.Context) {
 	// Inserts model into collection
 	insertErr := db.InsertOne(db.UserCollection, user)
 	if insertErr != nil {
-		utils.SendResponse(c, http.StatusInternalServerError, utils.DatabaseInsertionError)
+		utils.SendStaticResponse(c, http.StatusInternalServerError, utils.DatabaseInsertionError)
 		return
 	}
 
-	// Handles a positive response if no errors were found
-	utils.SendResponse(c, http.StatusCreated, utils.DatabaseInsertionSuccess)
+	utils.SendStaticResponse(c, http.StatusCreated, utils.DatabaseInsertionSuccess)
 	return
 }
