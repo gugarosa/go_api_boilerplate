@@ -16,11 +16,7 @@ func InitRouter(r *gin.Engine) {
 
 	// Non-existing
 	r.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":  http.StatusNotFound,
-			"message": utils.NoRouteMessage,
-		})
-
+		utils.SendResponse(c, http.StatusNotFound, utils.NoRouteMessage)
 		return
 	})
 }

@@ -1,5 +1,8 @@
 package utils
 
+// DatabaseAlreadyExists constant
+const DatabaseAlreadyExists string = "Document already exists."
+
 // DatabaseClientConnected constant
 const DatabaseClientConnected string = "MongoDB client has been connected."
 
@@ -14,6 +17,3 @@ const LoginError string = "Login could not be performed."
 
 // NoRouteMessage constant
 const NoRouteMessage string = "This route is not available."
-
-// UserAlreadyExists constant
-const UserAlreadyExists string = "User already exists."

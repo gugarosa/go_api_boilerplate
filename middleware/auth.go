@@ -34,7 +34,7 @@ func CreateNewToken(id primitive.ObjectID) (*models.Token, error) {
 
 	t.AccessToken, err = at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
 
-	if !utils.HandleError(err) {
+	if utils.HandleErrors(err) != nil {
 		return nil, err
 	}
 
@@ -45,7 +45,7 @@ func CreateNewToken(id primitive.ObjectID) (*models.Token, error) {
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
 	t.RefreshToken, err = rt.SignedString([]byte(os.Getenv("REFRESH_SECRET")))
 
-	if !utils.HandleError(err) {
+	if utils.HandleErrors(err) != nil {
 		return nil, err
 	}
 

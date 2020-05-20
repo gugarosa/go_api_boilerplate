@@ -3,8 +3,8 @@ package auth
 import (
 	"net/http"
 	"time"
-	"vivere_api/db"
 	"vivere_api/controllers"
+	"vivere_api/db"
 	"vivere_api/models"
 	"vivere_api/utils"
 
@@ -16,38 +16,39 @@ import (
 // RegisterNewUser expects an input JSON containing the following keys:
 // (`email`, `password`)
 func RegisterNewUser(c *gin.Context) {
-	// Creating an user variable
+	// Creates an user variable
 	var user models.User
 
-	// Binding and validating the incoming request
+	// Binds and validates the incoming request
 	// If it return as false, an error might occurred
-	if !controllers.BindAndValidateIncomingRequest(c, &user) {
+	if !controllers.BindAndValidateRequest(c, &user) {
 		return
 	}
 
-	// Finding a model in collection with the same inputted e-mail
-	if db.FindOne(c, db.UserCollection, bson.M{"email": user.Email}, &models.User{}) {
-		// If a model has been found, return a JSON indicating that user already exists
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  http.StatusInternalServerError,
-			"message": utils.UserAlreadyExists,
-		})
+	// Finds a model in collection with the same inputted e-mail
+	findErr := db.FindOne(db.UserCollection, bson.M{"email": user.Email}, &models.User{})
+	if findErr == nil {
+		utils.SendResponse(c, http.StatusInternalServerError, utils.DatabaseAlreadyExists)
 		return
 	}
 
-	// Hashing and salting the user password
+	// Hashes and salts the user password
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 
-	// Declaring new properties
+	// Declares new properties
 	user.Password = string(hashedPassword)
 	user.Token = ""
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 
-	// Inserting model into collection and checking for an insertion error
-	if !db.InsertOne(c, db.UserCollection, user) {
+	// Inserts model into collection
+	insertErr := db.InsertOne(db.UserCollection, user)
+	if insertErr != nil {
+		utils.SendResponse(c, http.StatusInternalServerError, utils.DatabaseInsertionError)
 		return
 	}
 
+	// Handles a positive response if no errors were found
+	utils.SendResponse(c, http.StatusCreated, utils.DatabaseInsertionSuccess)
 	return
 }

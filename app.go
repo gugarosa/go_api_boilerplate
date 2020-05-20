@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"vivere_api/db"
 	"vivere_api/server"
@@ -11,15 +10,15 @@ import (
 )
 
 func init() {
-	// Loading environment file
-	err := godotenv.Load()
+	// Loads environment file
+	loadErr := godotenv.Load()
 
 	// Handles a possible fatal error
-	utils.HandleFatalError(err)
+	utils.HandleFatalError(loadErr)
 }
 
 func getConfig() map[string]string {
-	// Creating the configuration object
+	// Creates the configuration object
 	config := map[string]string{
 		"mode":      os.Getenv("MODE"),
 		"dbUser":    os.Getenv("DB_USER"),
@@ -34,13 +33,14 @@ func getConfig() map[string]string {
 }
 
 func main() {
-	// Getting arguments from environment file
+	// Gets arguments from environment file
 	c := getConfig()
 
-	// Initializing the database and the cache
-	db.InitDatabase(fmt.Sprintf("mongodb://%s:%s@db:%s", c["dbUser"], c["dbPass"], c["dbPort"]), c["dbName"])
-	db.InitRedis(c["redisPort"], c["redisPass"])
+	// Initializes the database and the cache
+	// db.InitDatabase(fmt.Sprintf("mongodb://%s:%s@db:%s", c["dbUser"], c["dbPass"], c["dbPort"]), c["dbName"])
+	db.InitDatabase("mongodb://localhost:27017", c["dbName"])
+	// db.InitRedis(c["redisPort"], c["redisPass"])
 
-	// Initializing the server
+	// Initializes the server
 	server.InitServer(c["mode"])
 }

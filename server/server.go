@@ -4,13 +4,13 @@ import "github.com/gin-gonic/gin"
 
 // InitServer expects an initialization mode to start the application
 func InitServer(mode string) {
-	// Setting application mode and creating it
+	// Sets application mode and creates it
 	gin.SetMode(mode)
 	r := gin.Default()
 
-	// Initializing the router
+	// Initializes the router
 	InitRouter(r)
 
-	// Running the application
+	// Runs the application
 	r.Run()
 }
