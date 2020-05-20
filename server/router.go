@@ -11,12 +11,12 @@ import (
 // InitRouter expects an router argument to configure the desired API routes
 func InitRouter(r *gin.Engine) {
 	// Authorization
-	r.POST("/login", auth.LogNewUser)
-	r.POST("/register", auth.RegisterNewUser)
+	r.POST("/login", auth.LogUser)
+	r.POST("/register", auth.RegisterUser)
 
 	// Non-existing
 	r.NoRoute(func(c *gin.Context) {
-		utils.SendStaticResponse(c, http.StatusNotFound, utils.NoRouteMessage)
+		utils.StaticResponse(c, http.StatusNotFound, utils.NoRouteMessage)
 		return
 	})
 }

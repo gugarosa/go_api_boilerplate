@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"vivere_api/db"
 	"vivere_api/server"
@@ -37,9 +38,8 @@ func main() {
 	c := getConfig()
 
 	// Initializes the database and the cache
-	// db.InitDatabase(fmt.Sprintf("mongodb://%s:%s@db:%s", c["dbUser"], c["dbPass"], c["dbPort"]), c["dbName"])
-	db.InitDatabase("mongodb://localhost:27017", c["dbName"])
-	// db.InitRedis(c["redisPort"], c["redisPass"])
+	db.InitDatabase(fmt.Sprintf("mongodb://%s:%s@db:%s", c["dbUser"], c["dbPass"], c["dbPort"]), c["dbName"])
+	db.InitRedis(c["redisPort"], c["redisPass"])
 
 	// Initializes the server
 	server.InitServer(c["mode"])

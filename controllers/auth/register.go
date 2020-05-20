@@ -13,9 +13,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// RegisterNewUser expects an input JSON containing the following keys:
+// RegisterUser expects an input JSON containing the following keys:
 // (`email`, `password`)
-func RegisterNewUser(c *gin.Context) {
+func RegisterUser(c *gin.Context) {
 	// Creates an user variable
 	var user models.User
 
@@ -28,7 +28,7 @@ func RegisterNewUser(c *gin.Context) {
 	// Finds a model in collection with the same inputted e-mail
 	findErr := db.FindOne(db.UserCollection, bson.M{"email": user.Email}, &models.User{})
 	if findErr == nil {
-		utils.SendStaticResponse(c, http.StatusInternalServerError, utils.DatabaseAlreadyExists)
+		utils.StaticResponse(c, http.StatusInternalServerError, utils.DatabaseAlreadyExists)
 		return
 	}
 
@@ -44,10 +44,10 @@ func RegisterNewUser(c *gin.Context) {
 	// Inserts model into collection
 	insertErr := db.InsertOne(db.UserCollection, user)
 	if insertErr != nil {
-		utils.SendStaticResponse(c, http.StatusInternalServerError, utils.DatabaseInsertionError)
+		utils.StaticResponse(c, http.StatusInternalServerError, utils.DatabaseInsertionError)
 		return
 	}
 
-	utils.SendStaticResponse(c, http.StatusCreated, utils.DatabaseInsertionSuccess)
+	utils.StaticResponse(c, http.StatusCreated, utils.DatabaseInsertionSuccess)
 	return
 }

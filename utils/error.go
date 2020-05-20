@@ -1,10 +1,6 @@
 package utils
 
-import (
-	"log"
-
-	"github.com/gin-gonic/gin"
-)
+import "log"
 
 // HandleError expects an dynamic number of error arguments,
 // logs and returns the first error occurence
@@ -29,13 +25,4 @@ func HandleFatalError(errs ...error) error {
 	}
 
 	return nil
-}
-
-// SendStaticResponse expects a Gin context, status identifier and message
-// to create the JSON response
-func SendStaticResponse(c *gin.Context, status int, message string) {
-	c.JSON(status, gin.H{
-		"status":  status,
-		"message": message,
-	})
 }
