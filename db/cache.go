@@ -1,10 +1,10 @@
-package middleware
+package db
 
 import (
 	"fmt"
-	"os"
 	"time"
 	"vivere_api/models"
+	"vivere_api/utils"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
@@ -14,19 +14,20 @@ import (
 // Client
 var client *redis.Client
 
-// InitializeRedis ...
-func InitializeRedis() {
-	//Initializing redis
-	dsn := os.Getenv("REDIS_PORT")
+// InitRedis expects a port and a password
+// to initialize a Redis service
+func InitRedis(port string, password string) {
+	// Creating a Redis client
 	client = redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("cache:%s", dsn),
-		Password: os.Getenv("REDIS_PASS"),
+		Addr:     fmt.Sprintf("cache:%s", port),
+		Password: password,
 		DB:       0,
 	})
-	_, err := client.Ping().Result()
-	if err != nil {
-		panic(err)
-	}
+
+	// Pinging client to check its connection and handling possible eror
+	_, pingErr := client.Ping().Result()
+	utils.HandleFatalError(pingErr)
+
 }
 
 // CreateAuth ...

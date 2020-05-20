@@ -18,20 +18,29 @@ func init() {
 	utils.HandleFatalError(err)
 }
 
+func getConfig() map[string]string {
+	// Creating the configuration object
+	config := map[string]string{
+		"mode":      os.Getenv("MODE"),
+		"dbUser":    os.Getenv("DB_USER"),
+		"dbPass":    os.Getenv("DB_PASS"),
+		"dbName":    os.Getenv("DB_NAME"),
+		"dbPort":    os.Getenv("DB_PORT"),
+		"redisPass": os.Getenv("REDIS_PASS"),
+		"redisPort": os.Getenv("REDIS_PORT"),
+	}
+
+	return config
+}
+
 func main() {
 	// Getting arguments from environment file
-	mode := os.Getenv("MODE")
-	dbUser := os.Getenv("DB_USER")
-	dbPass := os.Getenv("DB_PASS")
-	dbName := os.Getenv("DB_NAME")
-	dbPort := os.Getenv("DB_PORT")
+	c := getConfig()
 
-	// Initializing the database
-	db.InitDatabase(fmt.Sprintf("mongodb://%s:%s@db:%s", dbUser, dbPass, dbPort), dbName)
-
-	// Initializing middlewares
-	// middleware.InitRedis()
+	// Initializing the database and the cache
+	db.InitDatabase(fmt.Sprintf("mongodb://%s:%s@db:%s", c["dbUser"], c["dbPass"], c["dbPort"]), c["dbName"])
+	db.InitRedis(c["redisPort"], c["redisPass"])
 
 	// Initializing the server
-	server.InitServer(mode)
+	server.InitServer(c["mode"])
 }

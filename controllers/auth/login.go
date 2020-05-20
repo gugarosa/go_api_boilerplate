@@ -2,8 +2,8 @@ package auth
 
 import (
 	"net/http"
-	"vivere_api/db"
 	"vivere_api/controllers"
+	"vivere_api/db"
 	"vivere_api/middleware"
 	"vivere_api/models"
 	"vivere_api/utils"
@@ -61,7 +61,7 @@ func LogNewUser(c *gin.Context) {
 		return
 	}
 
-	saveErr := middleware.CreateAuth(dbUser.ID, token)
+	saveErr := db.CreateAuth(dbUser.ID, token)
 
 	// Handles if an error has occured
 	if !utils.HandleError(saveErr) {
