@@ -61,11 +61,7 @@ func LogNewUser(c *gin.Context) {
 		return
 	}
 
-	saveErr := db.CreateAuth(dbUser.ID, token)
-
-	// Handles if an error has occured
-	if !utils.HandleError(saveErr) {
-		// If yes, returns a JSON with an error status
+	if !db.SetTokens(dbUser.ID, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"status":  http.StatusUnauthorized,
 			"message": utils.LoginError,
