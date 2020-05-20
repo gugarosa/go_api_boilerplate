@@ -3,7 +3,7 @@ package auth
 import (
 	"net/http"
 	"vivere_api/db"
-	"vivere_api/handlers"
+	"vivere_api/controllers"
 	"vivere_api/middleware"
 	"vivere_api/models"
 	"vivere_api/utils"
@@ -21,7 +21,7 @@ func LogNewUser(c *gin.Context) {
 
 	// Binding the incoming request
 	// If it return as false, an error might occurred
-	if !handlers.BindIncomingRequest(c, &inputUser) {
+	if !controllers.BindIncomingRequest(c, &inputUser) {
 		return
 	}
 

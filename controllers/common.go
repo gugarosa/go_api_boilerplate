@@ -1,4 +1,4 @@
-package handlers
+package controllers
 
 import (
 	"vivere_api/utils"

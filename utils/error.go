@@ -3,13 +3,14 @@ package utils
 import "log"
 
 // HandleError expects an dynamic number of error arguments,
-// logs if an error has happened and returns `true`
+// logs if an error has happened and returns `false`, otherwise returns `true`
 func HandleError(errs ...error) bool {
 	// For every possible error
 	for _, err := range errs {
-		// Check if it exists, logs it and return as `true`
+		// Checks if it exists, logs it and return as `false`
 		if err != nil {
 			log.Println(err)
+
 			return false
 		}
 	}
@@ -22,7 +23,7 @@ func HandleError(errs ...error) bool {
 func HandleFatalError(errs ...error) bool {
 	// For every possible error
 	for _, err := range errs {
-		// Check if it exists, logs it and exits the system
+		// Checks if it exists, logs it and exits the system
 		if err != nil {
 			log.Fatal(err)
 		}

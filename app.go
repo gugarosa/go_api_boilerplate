@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
-	"vivere_api/core"
-	"vivere_api/middleware"
+	"vivere_api/db"
+	"vivere_api/server"
+	"vivere_api/utils"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -15,11 +14,8 @@ func init() {
 	// Loading environment file
 	err := godotenv.Load()
 
-	// If environment file could not be loaded
-	if err != nil {
-		// Invokes a fatal error
-		log.Fatal("The .env file could not be found.")
-	}
+	// Handles a possible fatal error
+	utils.HandleFatalError(err)
 }
 
 func main() {
@@ -30,19 +26,12 @@ func main() {
 	dbName := os.Getenv("DB_NAME")
 	dbPort := os.Getenv("DB_PORT")
 
-	// Initializing the database with desired arguments
-	core.InitializeDatabase(fmt.Sprintf("mongodb://%s:%s@db:%s", dbUser, dbPass, dbPort), dbName)
+	// Initializing the database
+	db.InitDatabase(fmt.Sprintf("mongodb://%s:%s@db:%s", dbUser, dbPass, dbPort), dbName)
 
-	//
-	middleware.InitializeRedis()
+	// Initializing middlewares
+	// middleware.InitRedis()
 
-	// Setting application mode and initializing it
-	gin.SetMode(mode)
-	r := gin.Default()
-
-	// Adding the router to the application
-	core.AddRouter(r)
-
-	// Running the application
-	r.Run()
+	// Initializing the server
+	server.InitServer(mode)
 }

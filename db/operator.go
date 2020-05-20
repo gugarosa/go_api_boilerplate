@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// FindOne expects a collection and a model in order to find
+// FindOne expects a collection, a model and a filter in order to find
 // a single document into the database
 func FindOne(c *gin.Context, collection *mongo.Collection, filter bson.M, model interface{}) bool {
 	// Tries to find model in the database
@@ -32,18 +32,18 @@ func InsertOne(c *gin.Context, collection *mongo.Collection, model interface{}) 
 
 	// Handles if an error has occured
 	if !utils.HandleError(insertErr) {
-		// If yes, returns a JSON with an error status
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
 			"message": utils.DatabaseInsertionError,
 		})
+
 		return false
 	}
 
-	// If not, returns a JSON with a success status
 	c.JSON(http.StatusCreated, gin.H{
 		"status":  http.StatusCreated,
 		"message": utils.DatabaseInsertionSuccess,
 	})
+
 	return true
 }

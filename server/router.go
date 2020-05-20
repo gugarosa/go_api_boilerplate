@@ -1,20 +1,17 @@
-package core
+package server
 
 import (
 	"net/http"
-	"vivere_api/handlers/auth"
+	"vivere_api/controllers/auth"
 	"vivere_api/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-// AddRouter expects an router argument to configure
-// the desired API routes
-func AddRouter(r *gin.Engine) {
-	// Login
+// InitRouter expects an router argument to configure the desired API routes
+func InitRouter(r *gin.Engine) {
+	// Authorization
 	r.POST("/login", auth.LogNewUser)
-
-	// Registration
 	r.POST("/register", auth.RegisterNewUser)
 
 	// Non-existing
@@ -23,6 +20,7 @@ func AddRouter(r *gin.Engine) {
 			"status":  http.StatusNotFound,
 			"message": utils.NoRouteMessage,
 		})
+
 		return
 	})
 }
