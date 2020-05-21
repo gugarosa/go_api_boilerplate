@@ -12,17 +12,8 @@ COPY . .
 # Install the dependencies
 RUN go mod download
 
-#
-RUN go build app.go
+# Builds the application
+RUN go build -o app app.go
 
-#
+# Runs the application
 CMD ["./app"]
-
-#
-# RUN go get github.com/codegangsta/gin
-
-#
-# EXPOSE 3001
-
-# 
-# CMD ["gin", "--port", "8080", "run", "app.go"]
