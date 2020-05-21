@@ -25,8 +25,10 @@ func getConfig() map[string]string {
 		"dbUser":    os.Getenv("DB_USER"),
 		"dbPass":    os.Getenv("DB_PASS"),
 		"dbName":    os.Getenv("DB_NAME"),
+		"dbHost":    os.Getenv("DB_HOST"),
 		"dbPort":    os.Getenv("DB_PORT"),
 		"redisPass": os.Getenv("REDIS_PASS"),
+		"redisHost": os.Getenv("REDIS_HOST"),
 		"redisPort": os.Getenv("REDIS_PORT"),
 	}
 
@@ -38,8 +40,8 @@ func main() {
 	c := getConfig()
 
 	// Initializes the database and the cache
-	db.InitDatabase(fmt.Sprintf("mongodb://%s:%s@db:%s", c["dbUser"], c["dbPass"], c["dbPort"]), c["dbName"])
-	db.InitRedis(c["redisPort"], c["redisPass"])
+	db.InitDatabase(fmt.Sprintf("mongodb://%s:%s@%s:%s", c["dbUser"], c["dbPass"], c["dbHost"], c["dbPort"]), c["dbName"])
+	db.InitRedis(c["redisHost"], c["redisPort"], c["redisPass"])
 
 	// Initializes the server
 	server.InitServer(c["mode"])

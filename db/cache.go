@@ -16,10 +16,10 @@ var client *redis.Client
 
 // InitRedis expects a port and a password
 // to initialize a Redis service
-func InitRedis(port string, password string) {
+func InitRedis(host string, port string, password string) {
 	// Creates a Redis client
 	client = redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("cache:%s", port),
+		Addr:     fmt.Sprintf("%s:%s", host, port),
 		Password: password,
 		DB:       0,
 	})
