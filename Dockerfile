@@ -1,19 +1,26 @@
+# Imports a GO alpine image
 FROM golang:1.14-alpine
 
+# Sets environment variables necessary for building
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
+
 # Creates the application's directory
-RUN mkdir -p /api
+RUN mkdir -p /src
 
 # Sets the work directory to application's folder
-WORKDIR /api
+WORKDIR /src
 
 # Copy files into application's folder
-COPY . .
+COPY ./src .
 
 # Install the dependencies
 RUN go mod download
 
-# Builds the application
-RUN CGO_ENABLED=0 GOARCH=amd64 go build -o app app.go
+# Installing reflex
+RUN go get github.com/cespare/reflex
 
-# Runs the application
-# CMD ["./app"]
+# Running a reflex job for hot-reloading
+CMD ["reflex", "-c", "./reflex.conf"]
