@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+    cache:
+        image: redis
+        container_name: cache
+        ports:
+            - 6379:${REDIS_PORT}
+        volumes:
+            - ./storage/redis:/data
+        command: redis-server --requirepass ${REDIS_PASS} --appendonly yes
+        restart: always
+    db:
+        image: mongo
+        container_name: db
+        ports:
+            - 27017:${DB_PORT}
+        volumes:
+            - ./storage/db:/data/db
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+            MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
+            MONGO_INITDB_DATABASE: ${DB_NAME}
+        command: mongod --port ${DB_PORT}
+    api:
+        build: '.'
+        container_name: api
+        links:
+            - cache
+            - db
+        depends_on: 
+            - cache
+            - db
+        ports:
+            - 8080:${PORT}
+        environment:
+            PORT: ${PORT}
+            MODE: ${MODE}
+            DB_USER: ${DB_USER}
+            DB_PASS: ${DB_PASS}
+            DB_NAME: ${DB_NAME}
+            DB_HOST: ${DB_HOST}
+            DB_PORT: ${DB_PORT}
+            REDIS_PASS: ${REDIS_PASS}
+            REDIS_HOST: ${REDIS_HOST}
+            REDIS_PORT: ${REDIS_PORT}
+        restart: always

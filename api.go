@@ -5,18 +5,7 @@ import (
 	"os"
 	"vivere_api/db"
 	"vivere_api/server"
-	"vivere_api/utils"
-
-	"github.com/joho/godotenv"
 )
-
-func init() {
-	// Loads environment file
-	loadErr := godotenv.Load()
-
-	// Handles a possible fatal error
-	utils.HandleFatalError(loadErr)
-}
 
 func getConfig() map[string]string {
 	// Creates the configuration object
