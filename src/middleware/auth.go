@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 	"vivere_api/models"
@@ -34,7 +33,7 @@ func CreateToken(id primitive.ObjectID) (*models.Token, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["access_uuid"] = t.AccessUUID
-	claims["id"] = id
+	claims["id"] = id.Hex()
 	claims["exp"] = t.AccessExpires
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
@@ -114,10 +113,8 @@ func GetTokenData(r *http.Request) (*models.Access, error) {
 		if !ok {
 			return nil, err
 		}
-		userID, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["user_id"]), 10, 64)
-		if err != nil {
-			return nil, err
-		}
+		// userID, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["id"]), 10, 64)
+		userID := claims["id"].(string)
 		return &models.Access{
 			AccessUUID: accessUUID,
 			UserID:     userID,

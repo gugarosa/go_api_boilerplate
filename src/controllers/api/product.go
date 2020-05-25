@@ -17,15 +17,18 @@ func CreateProduct(c *gin.Context) {
 		return
 	}
 	tokenAuth, err := middleware.GetTokenData(c.Request)
+
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "unauthorized")
 		return
 	}
+
 	_, err = db.GetAuth(tokenAuth)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "unauthorized")
 		return
 	}
+
 	td.Name = "Test"
 
 	//you can proceed to save the Product to a database
