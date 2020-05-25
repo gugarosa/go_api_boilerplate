@@ -44,4 +44,6 @@ services:
             REDIS_PASS: ${REDIS_PASS}
             REDIS_HOST: ${REDIS_HOST}
             REDIS_PORT: ${REDIS_PORT}
+            ACCESS_SECRET: ${ACCESS_SECRET}
+            REFRESH_SECRET: ${REFRESH_SECRET}
         restart: always

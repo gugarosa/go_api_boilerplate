@@ -41,14 +41,14 @@ func LogUser(c *gin.Context) {
 	}
 
 	// Creates new authentication tokens
-	token, tokenErr := middleware.CreateNewToken(dbUser.ID)
+	token, tokenErr := middleware.CreateToken(dbUser.ID)
 	if utils.HandleError(tokenErr) != nil {
 		utils.StaticResponse(c, http.StatusUnauthorized, utils.LoginError)
 		return
 	}
 
 	// Sets the tokens in Redis
-	setErr := db.SetTokens(dbUser.ID, token)
+	setErr := db.SetAuth(dbUser.ID, token)
 	if utils.HandleError(setErr) != nil {
 		utils.StaticResponse(c, http.StatusUnauthorized, utils.LoginError)
 		return

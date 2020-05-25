@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 	"vivere_api/models"
 	"vivere_api/utils"
@@ -30,9 +31,9 @@ func InitRedis(host string, port string, password string) {
 
 }
 
-// SetTokens expects an ID and a Token model
+// SetAuth expects an ID and a Token model
 // to set the access and refresh tokens
-func SetTokens(id primitive.ObjectID, t *models.Token) error {
+func SetAuth(id primitive.ObjectID, t *models.Token) error {
 	// Gathers system times
 	accessTime := time.Unix(t.AccessExpires, 0)
 	refreshTime := time.Unix(t.RefreshExpires, 0)
@@ -44,4 +45,14 @@ func SetTokens(id primitive.ObjectID, t *models.Token) error {
 
 	// Handles and returns any possible errors
 	return utils.HandleError(accessErr, refreshErr)
+}
+
+// GetAuth ...
+func GetAuth(authD *models.Access) (uint64, error) {
+	userid, err := client.Get(authD.AccessUUID).Result()
+	if err != nil {
+		return 0, err
+	}
+	userID, _ := strconv.ParseUint(userid, 10, 64)
+	return userID, nil
 }
