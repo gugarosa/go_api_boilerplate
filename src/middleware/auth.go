@@ -9,6 +9,8 @@ import (
 	"vivere_api/models"
 	"vivere_api/utils"
 
+	"github.com/gin-gonic/gin"
+
 	"github.com/twinj/uuid"
 
 	"github.com/dgrijalva/jwt-go"
@@ -121,4 +123,17 @@ func GetTokenData(r *http.Request) (*models.Access, error) {
 		}, nil
 	}
 	return nil, err
+}
+
+// TokenAuthMiddleware ...
+func TokenAuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		err := ValidateToken(c.Request)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, err.Error())
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
 }

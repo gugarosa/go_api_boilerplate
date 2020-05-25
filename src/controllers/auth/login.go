@@ -14,9 +14,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// LogUser expects an input JSON containing the following keys:
+// Login expects an input JSON containing the following keys:
 // (`email`, `password`)
-func LogUser(c *gin.Context) {
+func Login(c *gin.Context) {
 	// Creates input and database user variables
 	var inputUser, dbUser models.User
 
