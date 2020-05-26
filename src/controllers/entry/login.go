@@ -1,12 +1,12 @@
-package auth
+package entry
 
 import (
 	"net/http"
-	"vivere_api/controllers"
 	"vivere_api/db"
 	"vivere_api/middleware"
 	"vivere_api/models"
 	"vivere_api/utils"
+	"vivere_api/utils/validators"
 
 	"golang.org/x/crypto/bcrypt"
 
@@ -20,15 +20,15 @@ func Login(c *gin.Context) {
 	// Creates input and database user variables
 	var inputUser, dbUser models.User
 
-	// Binds the request
-	bindErr := controllers.BindRequest(c, &inputUser)
-	if bindErr != nil {
+	// Binds the request and handle any possible errors
+	bindErr := validators.BindModel(c, &inputUser)
+	if utils.HandleError(bindErr) != nil {
 		return
 	}
 
 	// Finds a model in collection with the same inputted e-mail
 	findErr := db.FindOne(db.UserCollection, bson.M{"email": inputUser.Email}, &dbUser)
-	if findErr != nil {
+	if utils.HandleError(findErr) != nil {
 		utils.StaticResponse(c, http.StatusInternalServerError, utils.LoginError)
 		return
 	}

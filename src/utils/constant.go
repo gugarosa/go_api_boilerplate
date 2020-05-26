@@ -1,5 +1,8 @@
 package utils
 
+// AuthError constant
+const AuthError string = "Unauthorized access."
+
 // DatabaseAlreadyExists constant
 const DatabaseAlreadyExists string = "Document already exists."
 

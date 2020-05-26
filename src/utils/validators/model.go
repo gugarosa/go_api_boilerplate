@@ -2,35 +2,30 @@ package validators
 
 import (
 	"net/http"
+	"vivere_api/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
 
-// BindRequest expects a context and a model
+// BindModel expects a context and a model
 // to bind a generic model to the required context
-func BindRequest(c *gin.Context, model interface{}) error {
-	if err := c.ShouldBind(&model); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  http.StatusBadRequest,
-			"message": err.Error(),
-		})
-
+func BindModel(c *gin.Context, model interface{}) error {
+	err := c.ShouldBind(&model)
+	if err != nil {
+		utils.StaticResponse(c, http.StatusBadRequest, err.Error())
 		return err
 	}
 
 	return nil
 }
 
-// ValidateRequest expects a context and a model
+// ValidateModel expects a context and a model
 // to validate a request based on pre-defined validation rules
-func ValidateRequest(c *gin.Context, model interface{}) error {
-	if err := validator.New().Struct(model); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status": http.StatusBadRequest,
-			"error":  err.Error(),
-		})
-
+func ValidateModel(c *gin.Context, model interface{}) error {
+	err := validator.New().Struct(model)
+	if err != nil {
+		utils.StaticResponse(c, http.StatusBadRequest, err.Error())
 		return err
 	}
 

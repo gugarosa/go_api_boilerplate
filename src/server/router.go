@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 	"vivere_api/controllers/api"
-	"vivere_api/controllers/auth"
+	"vivere_api/controllers/entry"
 	"vivere_api/middleware"
 	"vivere_api/utils"
 
@@ -12,15 +12,19 @@ import (
 
 // InitRouter expects an router argument to configure the desired API routes
 func InitRouter(r *gin.Engine) {
-	// Authorization
-	r.POST("/login", auth.Login)
-	r.POST("/register", auth.RegisterUser)
-	r.POST("/logout", middleware.TokenAuthMiddleware(), auth.Logout)
+	// Non-authenticated routes
+	r.POST("/login", entry.Login)
+	r.POST("/register", entry.Register)
 
-	// Product
-	r.POST("/product", middleware.TokenAuthMiddleware(), api.CreateProduct)
+	// Authenticated routes
+	apiGroup := r.Group("/api")
+	apiGroup.Use(middleware.AuthGuard())
+	{
+		apiGroup.POST("/product", api.CreateProduct)
+		apiGroup.POST("/logout", api.Logout)
+	}
 
-	// Non-existing
+	// Non-existing routes
 	r.NoRoute(func(c *gin.Context) {
 		utils.StaticResponse(c, http.StatusNotFound, utils.NoRouteMessage)
 		return
