@@ -12,12 +12,12 @@ import (
 func Logout(c *gin.Context) {
 	au, err := middleware.GetTokenData(c.Request)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
+		c.JSON(http.StatusUnauthorized, "unauthorized1")
 		return
 	}
-	deleted, delErr := db.DeleteAuth(au.AccessUUID)
-	if delErr != nil || deleted == 0 { //if any goes wrong
-		c.JSON(http.StatusUnauthorized, "unauthorized")
+	delErr := db.DeleteRedisAccess(au.AccessUUID)
+	if delErr != nil { //if any goes wrong
+		c.JSON(http.StatusUnauthorized, "unauthorized2")
 		return
 	}
 	c.JSON(http.StatusOK, "Successfully logged out")

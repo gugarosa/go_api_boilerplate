@@ -19,13 +19,13 @@ func CreateProduct(c *gin.Context) {
 	tokenAuth, err := middleware.GetTokenData(c.Request)
 
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
+		c.JSON(http.StatusUnauthorized, "unauthorized3")
 		return
 	}
 
-	_, err = db.GetAuth(tokenAuth)
+	err = db.GetRedisAccess(tokenAuth)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
+		c.JSON(http.StatusUnauthorized, "unauthorized4")
 		return
 	}
 

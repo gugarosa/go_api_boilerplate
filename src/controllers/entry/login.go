@@ -47,9 +47,9 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Sets the tokens in Redis
-	setErr := db.SetAuth(dbUser.ID, token)
-	if utils.HandleError(setErr) != nil {
+	// Sets the cached accesses in Redis
+	accessErr, refreshErr := db.CreateRedisAccess(dbUser.ID, token)
+	if utils.HandleError(accessErr, refreshErr) != nil {
 		utils.StaticResponse(c, http.StatusUnauthorized, utils.LoginError)
 		return
 	}

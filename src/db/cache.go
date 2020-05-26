@@ -1,8 +1,8 @@
 package db
 
 import (
+	"errors"
 	"fmt"
-	"strconv"
 	"time"
 	"vivere_api/models"
 	"vivere_api/utils"
@@ -31,37 +31,41 @@ func InitRedis(host string, port string, password string) {
 
 }
 
-// SetAuth expects an ID and a Token model
-// to set the access and refresh tokens
-func SetAuth(id primitive.ObjectID, t *models.Token) error {
+// CreateRedisAccess expects an ID and a Token model
+// to create the cached access
+func CreateRedisAccess(id primitive.ObjectID, t *models.Token) (error, error) {
 	// Gathers system times
 	accessTime := time.Unix(t.AccessExpires, 0)
 	refreshTime := time.Unix(t.RefreshExpires, 0)
 	currentTime := time.Now()
 
-	// Tries to set access and refresh tokens
-	accessErr := client.Set(t.AccessUUID, id.Hex(), accessTime.Sub(currentTime)).Err()
-	refreshErr := client.Set(t.RefreshUUID, id.Hex(), refreshTime.Sub(currentTime)).Err()
+	// Creates access and refresh tokens
+	err := client.Set(t.AccessUUID, id.Hex(), accessTime.Sub(currentTime)).Err()
+	err2 := client.Set(t.RefreshUUID, id.Hex(), refreshTime.Sub(currentTime)).Err()
 
-	// Handles and returns any possible errors
-	return utils.HandleError(accessErr, refreshErr)
+	return err, err2
 }
 
-// GetAuth ...
-func GetAuth(authD *models.Access) (uint64, error) {
-	userid, err := client.Get(authD.AccessUUID).Result()
+// GetRedisAccess expects a RedisAccess model
+// to return whether cached access is valid or not
+func GetRedisAccess(access *models.RedisAccess) error {
+	// Gathers the access from Redis and handles any possible errors
+	_, err := client.Get(access.AccessUUID).Result()
 	if err != nil {
-		return 0, err
+		return err
 	}
-	userID, _ := strconv.ParseUint(userid, 10, 64)
-	return userID, nil
+
+	return nil
 }
 
-// DeleteAuth ...
-func DeleteAuth(givenUUID string) (int64, error) {
-	deleted, err := client.Del(givenUUID).Result()
-	if err != nil {
-		return 0, err
+// DeleteRedisAccess expects a RedisAccess UUID
+// to remove the cached access
+func DeleteRedisAccess(uuid string) error {
+	// Deletes the cached access from Redis and handles any possible errors
+	amountKey, err := client.Del(uuid).Result()
+	if err != nil || amountKey == 0 {
+		return errors.New("key could not be deleted")
 	}
-	return deleted, nil
+
+	return nil
 }

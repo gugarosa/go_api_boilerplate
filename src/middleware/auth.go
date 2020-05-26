@@ -107,22 +107,27 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 }
 
 // GetTokenData expects an incoming request
-// to gather the token meta-data
-func GetTokenData(r *http.Request) (*models.Access, error) {
-	// Gathers an already-verified token
+// to gather the token metadata
+func GetTokenData(r *http.Request) (*models.RedisAccess, error) {
+	// Gathers an already-verified token and handle any possible errors
 	token, err := VerifyToken(r)
 	if err != nil {
 		return nil, err
 	}
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if ok && token.Valid {
-		accessUUID, ok := claims["access_uuid"].(string)
-		if !ok {
+
+	// Gathers the token metadata and its validation
+	claims, valid := token.Claims.(jwt.MapClaims)
+
+	// Checks whether token is valid and handle any possible errors
+	if valid && token.Valid {
+		accessUUID, valid := claims["access_uuid"].(string)
+		if !valid {
 			return nil, err
 		}
-		// userID, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["id"]), 10, 64)
+
 		userID := claims["id"].(string)
-		return &models.Access{
+
+		return &models.RedisAccess{
 			AccessUUID: accessUUID,
 			UserID:     userID,
 		}, nil
@@ -133,10 +138,8 @@ func GetTokenData(r *http.Request) (*models.Access, error) {
 // ValidateToken expects an incoming request
 // to verify whether token is valid or not
 func ValidateToken(r *http.Request) error {
-	// Gathers an already-verified token
+	// Gathers an already-verified token and handle any possible errors
 	token, err := VerifyToken(r)
-
-	// Handles any possible errors
 	if err != nil {
 		return err
 	}
@@ -155,8 +158,8 @@ func ValidateToken(r *http.Request) error {
 func AuthGuard() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Checks if token is valid and handle any possible errors
-		valErr := ValidateToken(c.Request)
-		if utils.HandleError(valErr) != nil {
+		err := ValidateToken(c.Request)
+		if err != nil {
 			utils.StaticResponse(c, http.StatusUnauthorized, utils.AuthError)
 			c.Abort()
 			return
