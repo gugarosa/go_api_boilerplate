@@ -27,23 +27,31 @@ func InitRedis(host string, port string, password string) {
 
 	// Pings client to check its connection and handles possible fatal error
 	_, pingErr := client.Ping().Result()
-	utils.HandleFatalError(pingErr)
+	utils.LogFatalError(pingErr)
 
 }
 
 // CreateRedisAccess expects an ID and a Token model
 // to create the cached access
-func CreateRedisAccess(id primitive.ObjectID, t *models.Token) (error, error) {
+func CreateRedisAccess(id primitive.ObjectID, t *models.Token) error {
 	// Gathers system times
 	accessTime := time.Unix(t.AccessExpires, 0)
 	refreshTime := time.Unix(t.RefreshExpires, 0)
 	currentTime := time.Now()
 
-	// Creates access and refresh tokens
+	// Creates access token and handles any possible errors
 	err := client.Set(t.AccessUUID, id.Hex(), accessTime.Sub(currentTime)).Err()
-	err2 := client.Set(t.RefreshUUID, id.Hex(), refreshTime.Sub(currentTime)).Err()
+	if err != nil {
+		return err
+	}
 
-	return err, err2
+	// Creates refresh token and handles any possible errors
+	err = client.Set(t.RefreshUUID, id.Hex(), refreshTime.Sub(currentTime)).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // GetRedisAccess expects a RedisAccess model

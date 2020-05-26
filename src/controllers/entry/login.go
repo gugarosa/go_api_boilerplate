@@ -2,11 +2,11 @@ package entry
 
 import (
 	"net/http"
+	"vivere_api/controllers"
 	"vivere_api/db"
 	"vivere_api/middleware"
 	"vivere_api/models"
 	"vivere_api/utils"
-	"vivere_api/utils/validators"
 
 	"golang.org/x/crypto/bcrypt"
 
@@ -20,36 +20,37 @@ func Login(c *gin.Context) {
 	// Creates input and database user variables
 	var inputUser, dbUser models.User
 
-	// Binds the request and handle any possible errors
-	bindErr := validators.BindModel(c, &inputUser)
-	if utils.HandleError(bindErr) != nil {
+	// Binds and validates the model, and handles any possible errors
+	checkErr := controllers.BindAndValidateRequest(c, &inputUser)
+	if utils.LogError(checkErr) != nil {
+		utils.StaticResponse(c, http.StatusBadRequest, utils.RequestError)
 		return
 	}
 
 	// Finds a model in collection with the same inputted e-mail
 	findErr := db.FindOne(db.UserCollection, bson.M{"email": inputUser.Email}, &dbUser)
-	if utils.HandleError(findErr) != nil {
+	if utils.LogError(findErr) != nil {
 		utils.StaticResponse(c, http.StatusInternalServerError, utils.LoginError)
 		return
 	}
 
 	// Compares if both passwords are the same
 	passwordErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(inputUser.Password))
-	if utils.HandleError(passwordErr) != nil {
+	if utils.LogError(passwordErr) != nil {
 		utils.StaticResponse(c, http.StatusUnauthorized, utils.LoginError)
 		return
 	}
 
 	// Creates new authentication tokens
 	token, tokenErr := middleware.CreateToken(dbUser.ID)
-	if utils.HandleError(tokenErr) != nil {
+	if utils.LogError(tokenErr) != nil {
 		utils.StaticResponse(c, http.StatusUnauthorized, utils.LoginError)
 		return
 	}
 
 	// Sets the cached accesses in Redis
-	accessErr, refreshErr := db.CreateRedisAccess(dbUser.ID, token)
-	if utils.HandleError(accessErr, refreshErr) != nil {
+	redisErr := db.CreateRedisAccess(dbUser.ID, token)
+	if utils.LogError(redisErr) != nil {
 		utils.StaticResponse(c, http.StatusUnauthorized, utils.LoginError)
 		return
 	}

@@ -3,10 +3,10 @@ package entry
 import (
 	"net/http"
 	"time"
+	"vivere_api/controllers"
 	"vivere_api/db"
 	"vivere_api/models"
 	"vivere_api/utils"
-	"vivere_api/utils/validators"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -19,21 +19,16 @@ func Register(c *gin.Context) {
 	// Creates an user variable
 	var user models.User
 
-	// Binds the model and handle any possible errors
-	bindErr := validators.BindModel(c, &user)
-	if utils.HandleError(bindErr) != nil {
-		return
-	}
-
-	// Validates the model and handle any possible errors
-	valErr := validators.ValidateModel(c, &user)
-	if utils.HandleError(valErr) != nil {
+	// Binds and validates the model, and handles any possible errors
+	checkErr := controllers.BindAndValidateRequest(c, &user)
+	if utils.LogError(checkErr) != nil {
+		utils.StaticResponse(c, http.StatusBadRequest, utils.RequestError)
 		return
 	}
 
 	// Finds a model in collection with the same inputted e-mail
 	findErr := db.FindOne(db.UserCollection, bson.M{"email": user.Email}, &models.User{})
-	if utils.HandleError(findErr) == nil {
+	if utils.LogError(findErr) == nil {
 		utils.StaticResponse(c, http.StatusInternalServerError, utils.DatabaseAlreadyExists)
 		return
 	}
@@ -48,7 +43,7 @@ func Register(c *gin.Context) {
 
 	// Inserts model into collection
 	insertErr := db.InsertOne(db.UserCollection, user)
-	if utils.HandleError(insertErr) != nil {
+	if utils.LogError(insertErr) != nil {
 		utils.StaticResponse(c, http.StatusInternalServerError, utils.DatabaseInsertionError)
 		return
 	}

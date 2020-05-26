@@ -2,36 +2,35 @@ package api
 
 import (
 	"net/http"
-	"vivere_api/db"
-	"vivere_api/middleware"
+	"vivere_api/controllers"
 	"vivere_api/models"
+	"vivere_api/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-// CreateProduct ...
+// CreateProduct expects an input JSON containing the following keys:
+// (`name`)
 func CreateProduct(c *gin.Context) {
-	var td *models.Product
-	if err := c.ShouldBindJSON(&td); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, "invalid json")
-		return
-	}
-	tokenAuth, err := middleware.GetTokenData(c.Request)
+	// Creates an empty Product model variable
+	var product models.Product
 
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized3")
-		return
-	}
-
-	err = db.GetRedisAccess(tokenAuth)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized4")
+	// Authenticates the request and handle any possible errors
+	authErr := controllers.AuthRequest(c)
+	if utils.LogError(authErr) != nil {
+		utils.StaticResponse(c, http.StatusBadRequest, utils.RequestError)
 		return
 	}
 
-	td.Name = "Test"
+	// Binds and validates the model, and handles any possible errors
+	checkErr := controllers.BindAndValidateRequest(c, &product)
+	if utils.LogError(checkErr) != nil {
+		return
+	}
 
-	//you can proceed to save the Product to a database
-	//but we will just return it to the caller here:
-	c.JSON(http.StatusCreated, td)
+	//
+	product.Name = "Test"
+
+	utils.StaticResponse(c, http.StatusCreated, product.Name)
+	return
 }

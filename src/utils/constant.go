@@ -18,5 +18,11 @@ const DatabaseInsertionSuccess string = "Document succesfully inserted."
 // LoginError constant
 const LoginError string = "Login could not be performed."
 
+// LogoutSuccess constant
+const LogoutSuccess string = "Logout has been successful."
+
 // NoRouteMessage constant
 const NoRouteMessage string = "This route is not available."
+
+// RequestError constant
+const RequestError string = "Unexpected request."

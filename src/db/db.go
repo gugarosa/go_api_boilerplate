@@ -24,7 +24,7 @@ func InitDatabase(url string, database string) {
 
 	// Pings client to check its connection and handles possible fatal error
 	pingErr := client.Ping(context.Background(), readpref.Primary())
-	utils.HandleFatalError(pingErr)
+	utils.LogFatalError(pingErr)
 
 	// If no error has occured, just log that the client has been connected
 	log.Println(utils.DatabaseClientConnected)
