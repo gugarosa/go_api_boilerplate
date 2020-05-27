@@ -20,7 +20,7 @@ func InitRouter(r *gin.Engine) {
 	apiGroup := r.Group("/api")
 	apiGroup.Use(middleware.AuthGuard())
 	{
-		apiGroup.POST("/product", api.CreateProduct)
+		apiGroup.POST("/item", api.CreateItem)
 		apiGroup.POST("/logout", api.Logout)
 	}
 
