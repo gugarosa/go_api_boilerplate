@@ -1,4 +1,4 @@
-package api
+package item
 
 import (
 	"net/http"
@@ -15,9 +15,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CreateItem expects an input JSON containing the following keys:
-// (`name`)
-func CreateItem(c *gin.Context) {
+func create(c *gin.Context) {
 	// Creates an empty Item model variable
 	var item models.Item
 
@@ -50,8 +48,7 @@ func CreateItem(c *gin.Context) {
 	return
 }
 
-// GetItemByID ...
-func GetItemByID(c *gin.Context) {
+func find(c *gin.Context) {
 	// Creates item variable
 	var item bson.M
 

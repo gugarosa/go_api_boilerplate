@@ -2,9 +2,8 @@ package server
 
 import (
 	"net/http"
-	"vivere_api/controllers/api"
 	"vivere_api/controllers/entry"
-	"vivere_api/middleware"
+	"vivere_api/controllers/item"
 	"vivere_api/utils"
 
 	"github.com/gin-gonic/gin"
@@ -12,17 +11,14 @@ import (
 
 // InitRouter expects an router argument to configure the desired API routes
 func InitRouter(r *gin.Engine) {
-	// Non-authenticated routes
-	r.POST("/login", entry.Login)
-	r.POST("/register", entry.Register)
-
-	// Authenticated routes
-	apiGroup := r.Group("/api")
-	apiGroup.Use(middleware.AuthGuard())
+	// Existing routes
+	v1 := r.Group("/v1")
 	{
-		apiGroup.POST("/item", api.CreateItem)
-		apiGroup.GET("/item/:id", api.GetItemByID)
-		apiGroup.POST("/logout", api.Logout)
+		// Entry-related routes, i.e., login, register and logout
+		entry.CreateRoutes(v1)
+
+		// Item-related routes
+		item.CreateRoutes(v1)
 	}
 
 	// Non-existing routes

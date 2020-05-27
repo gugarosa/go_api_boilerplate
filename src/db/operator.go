@@ -7,6 +7,18 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// // FindAll expects a collection and a model in order to find
+// // all documents into the database
+// func FindAll(collection *mongo.Collection, filter bson.M, models interface{}) error {
+// 	// Finds all models in the database and handles any possible errors
+// 	err := collection.Find(context.Background()).Decode(models)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	return nil
+// }
+
 // FindOne expects a collection, a model and a filter in order to find
 // a single document into the database
 func FindOne(collection *mongo.Collection, filter bson.M, model interface{}) error {
