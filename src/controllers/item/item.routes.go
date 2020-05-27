@@ -9,6 +9,7 @@ import (
 // CreateRoutes expects a RouterGroup
 // to create a group of common-knowledge routes
 func CreateRoutes(r *gin.RouterGroup) {
+	// Item-based routes
 	item := r.Group("/item")
 	{
 		item.POST("/", middleware.AuthGuard(), create)
