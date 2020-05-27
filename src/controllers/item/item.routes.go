@@ -13,7 +13,7 @@ func CreateRoutes(r *gin.RouterGroup) {
 	item := r.Group("/item")
 	{
 		item.POST("/", middleware.AuthGuard(), create)
-		// item.GET("/", list)
+		item.GET("/", list)
 		item.GET("/:id", find)
 		// item.DELETE("/:id", middleware.AuthGuard(), delete)
 		// item.PATCH("/:id", middleware.AuthGuard(), update)
