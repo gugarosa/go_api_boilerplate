@@ -6,6 +6,9 @@ const AuthError string = "Unauthorized access."
 // DatabaseAlreadyExists constant
 const DatabaseAlreadyExists string = "Document already exists."
 
+// DatabaseNonExists constant
+const DatabaseNonExists string = "Document does not exist."
+
 // DatabaseClientConnected constant
 const DatabaseClientConnected string = "MongoDB client has been connected."
 

@@ -8,6 +8,10 @@ import (
 	"vivere_api/models"
 	"vivere_api/utils"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"go.mongodb.org/mongo-driver/bson"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -44,4 +48,24 @@ func CreateItem(c *gin.Context) {
 
 	utils.StaticResponse(c, http.StatusCreated, utils.DatabaseInsertionSuccess)
 	return
+}
+
+// GetItemByID ...
+func GetItemByID(c *gin.Context) {
+	// Creates item variable
+	var item bson.M
+
+	//
+	id, _ := primitive.ObjectIDFromHex(c.Param("id"))
+
+	// Finds a model in collection with the same inputted e-mail
+	findErr := db.FindOne(db.ItemCollection, bson.M{"_id": id}, &item)
+	if utils.LogError(findErr) != nil {
+		utils.StaticResponse(c, http.StatusInternalServerError, utils.DatabaseNonExists)
+		return
+	}
+
+	utils.DynamicResponse(c, http.StatusOK, item)
+	return
+
 }

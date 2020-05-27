@@ -21,6 +21,7 @@ func InitRouter(r *gin.Engine) {
 	apiGroup.Use(middleware.AuthGuard())
 	{
 		apiGroup.POST("/item", api.CreateItem)
+		apiGroup.GET("/item/:id", api.GetItemByID)
 		apiGroup.POST("/logout", api.Logout)
 	}
 
