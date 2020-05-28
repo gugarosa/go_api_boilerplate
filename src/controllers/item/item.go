@@ -3,10 +3,10 @@ package item
 import (
 	"net/http"
 	"time"
-	"vivere_api/controllers"
-	"vivere_api/db"
-	"vivere_api/models"
-	"vivere_api/utils"
+	"go_api_boilerplate/controllers"
+	"go_api_boilerplate/db"
+	"go_api_boilerplate/models"
+	"go_api_boilerplate/utils"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 

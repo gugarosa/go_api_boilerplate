@@ -2,9 +2,9 @@ package server
 
 import (
 	"net/http"
-	"vivere_api/controllers/entry"
-	"vivere_api/controllers/item"
-	"vivere_api/utils"
+	"go_api_boilerplate/controllers/entry"
+	"go_api_boilerplate/controllers/item"
+	"go_api_boilerplate/utils"
 
 	"github.com/gin-gonic/gin"
 )

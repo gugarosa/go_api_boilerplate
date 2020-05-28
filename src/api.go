@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"vivere_api/db"
-	"vivere_api/server"
+	"go_api_boilerplate/db"
+	"go_api_boilerplate/server"
 )
 
 func getConfig() map[string]string {

@@ -1,7 +1,7 @@
 package entry
 
 import (
-	"vivere_api/middleware"
+	"go_api_boilerplate/middleware"
 
 	"github.com/gin-gonic/gin"
 )

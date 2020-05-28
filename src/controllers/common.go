@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"vivere_api/db"
-	"vivere_api/middleware"
-	"vivere_api/utils/validators"
+	"go_api_boilerplate/db"
+	"go_api_boilerplate/middleware"
+	"go_api_boilerplate/utils/validators"
 
 	"github.com/gin-gonic/gin"
 )

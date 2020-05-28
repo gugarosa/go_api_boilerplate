@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 	"time"
-	"vivere_api/utils"
+	"go_api_boilerplate/utils"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

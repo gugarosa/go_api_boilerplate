@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 	"time"
-	"vivere_api/models"
-	"vivere_api/utils"
+	"go_api_boilerplate/models"
+	"go_api_boilerplate/utils"
 
 	"github.com/gin-gonic/gin"
 

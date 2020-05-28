@@ -1,2 +1,2 @@
-# vivere-api
-A Go-based API for fulfilling Vivere's needs.
+# go_api_boilerplate
+A Go-based API boilerplate for speeding up future projects.

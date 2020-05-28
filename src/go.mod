@@ -1,4 +1,4 @@
-module vivere_api
+module go_api_boilerplate
 
 go 1.14
 
