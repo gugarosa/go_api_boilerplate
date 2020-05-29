@@ -60,6 +60,9 @@ func DecodeStruct(s interface{}) (bson.M, error) {
 
 	// Unmarshalling the encoded object
 	err = bson.Unmarshal(encoded, &decoded)
+	if err != nil {
+		return nil, err
+	}
 
-	return decoded, err
+	return decoded, nil
 }
