@@ -46,13 +46,20 @@ func BindAndValidateRequest(c *gin.Context, model interface{}) error {
 	return nil
 }
 
-// DecodeStruct ...
-func DecodeStruct(v interface{}) (doc bson.M, err error) {
-	data, err := bson.Marshal(v)
+// DecodeStruct expects an interface (struct)
+// to decode it into a BSON document
+func DecodeStruct(s interface{}) (bson.M, error) {
+	// Creating a bson.M variable
+	var decoded bson.M
+
+	// Marshalling the input struct
+	encoded, err := bson.Marshal(s)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	err = bson.Unmarshal(data, &doc)
-	return
+	// Unmarshalling the encoded object
+	err = bson.Unmarshal(encoded, &decoded)
+
+	return decoded, err
 }
