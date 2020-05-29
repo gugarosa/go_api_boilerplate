@@ -1,10 +1,10 @@
 package server
 
 import (
-	"net/http"
-	"go_api_boilerplate/controllers/entry"
+	"go_api_boilerplate/controllers/auth"
 	"go_api_boilerplate/controllers/item"
 	"go_api_boilerplate/utils"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,8 +14,8 @@ func InitRouter(r *gin.Engine) {
 	// Existing routes
 	v1 := r.Group("/v1")
 	{
-		// Entry-related routes, i.e., login, register and logout
-		entry.CreateRoutes(v1)
+		// Auth-related routes, i.e., login, register and logout
+		auth.CreateRoutes(v1)
 
 		// Item-related routes
 		item.CreateRoutes(v1)
@@ -23,7 +23,7 @@ func InitRouter(r *gin.Engine) {
 
 	// Non-existing routes
 	r.NoRoute(func(c *gin.Context) {
-		utils.StaticResponse(c, http.StatusNotFound, utils.NoRouteMessage)
+		utils.ConstantResponse(c, http.StatusNotFound, utils.NoRouteMessage)
 		return
 	})
 }

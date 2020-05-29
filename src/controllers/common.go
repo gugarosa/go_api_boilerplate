@@ -5,6 +5,8 @@ import (
 	"go_api_boilerplate/middleware"
 	"go_api_boilerplate/utils/validators"
 
+	"go.mongodb.org/mongo-driver/bson"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -42,4 +44,15 @@ func BindAndValidateRequest(c *gin.Context, model interface{}) error {
 	}
 
 	return nil
+}
+
+// DecodeStruct ...
+func DecodeStruct(v interface{}) (doc bson.M, err error) {
+	data, err := bson.Marshal(v)
+	if err != nil {
+		return
+	}
+
+	err = bson.Unmarshal(data, &doc)
+	return
 }

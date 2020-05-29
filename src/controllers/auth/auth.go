@@ -1,13 +1,13 @@
-package entry
+package auth
 
 import (
-	"net/http"
-	"time"
 	"go_api_boilerplate/controllers"
 	"go_api_boilerplate/db"
 	"go_api_boilerplate/middleware"
 	"go_api_boilerplate/models"
 	"go_api_boilerplate/utils"
+	"net/http"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 
@@ -22,35 +22,35 @@ func login(c *gin.Context) {
 	// Binds and validates the model, and handles any possible errors
 	checkErr := controllers.BindAndValidateRequest(c, &inputUser)
 	if utils.LogError(checkErr) != nil {
-		utils.StaticResponse(c, http.StatusBadRequest, utils.RequestError)
+		utils.ConstantResponse(c, http.StatusBadRequest, utils.RequestError)
 		return
 	}
 
 	// Finds a model in collection with the same inputted e-mail
 	findErr := db.FindOne(db.UserCollection, bson.M{"email": inputUser.Email}, &dbUser)
 	if utils.LogError(findErr) != nil {
-		utils.StaticResponse(c, http.StatusInternalServerError, utils.LoginError)
+		utils.ConstantResponse(c, http.StatusInternalServerError, utils.LoginError)
 		return
 	}
 
 	// Compares if both passwords are the same
 	passwordErr := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(inputUser.Password))
 	if utils.LogError(passwordErr) != nil {
-		utils.StaticResponse(c, http.StatusUnauthorized, utils.LoginError)
+		utils.ConstantResponse(c, http.StatusUnauthorized, utils.LoginError)
 		return
 	}
 
 	// Creates new authentication tokens
 	token, tokenErr := middleware.CreateToken(dbUser.ID)
 	if utils.LogError(tokenErr) != nil {
-		utils.StaticResponse(c, http.StatusUnauthorized, utils.LoginError)
+		utils.ConstantResponse(c, http.StatusUnauthorized, utils.LoginError)
 		return
 	}
 
 	// Sets the cached accesses in Redis
 	redisErr := db.CreateRedisAccess(dbUser.ID, token)
 	if utils.LogError(redisErr) != nil {
-		utils.StaticResponse(c, http.StatusUnauthorized, utils.LoginError)
+		utils.ConstantResponse(c, http.StatusUnauthorized, utils.LoginError)
 		return
 	}
 
@@ -68,14 +68,14 @@ func register(c *gin.Context) {
 	// Binds and validates the model, and handles any possible errors
 	checkErr := controllers.BindAndValidateRequest(c, &user)
 	if utils.LogError(checkErr) != nil {
-		utils.StaticResponse(c, http.StatusBadRequest, utils.RequestError)
+		utils.ConstantResponse(c, http.StatusBadRequest, utils.RequestError)
 		return
 	}
 
 	// Finds a model in collection with the same inputted e-mail
 	findErr := db.FindOne(db.UserCollection, bson.M{"email": user.Email}, &models.User{})
 	if utils.LogError(findErr) == nil {
-		utils.StaticResponse(c, http.StatusInternalServerError, utils.DatabaseAlreadyExists)
+		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseAlreadyExists)
 		return
 	}
 
@@ -90,11 +90,11 @@ func register(c *gin.Context) {
 	// Inserts model into collection
 	insertErr := db.InsertOne(db.UserCollection, user)
 	if utils.LogError(insertErr) != nil {
-		utils.StaticResponse(c, http.StatusInternalServerError, utils.DatabaseInsertionError)
+		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseInsertError)
 		return
 	}
 
-	utils.StaticResponse(c, http.StatusCreated, utils.DatabaseInsertionSuccess)
+	utils.ConstantResponse(c, http.StatusCreated, utils.DatabaseInsertSuccess)
 	return
 }
 
@@ -102,17 +102,17 @@ func logout(c *gin.Context) {
 	// Gets the token metadata from request and handle any possible errors
 	token, getErr := middleware.GetTokenData(c.Request)
 	if utils.LogError(getErr) != nil {
-		utils.StaticResponse(c, http.StatusUnauthorized, utils.AuthError)
+		utils.ConstantResponse(c, http.StatusUnauthorized, utils.AuthError)
 		return
 	}
 
 	// Deletes the cached access from Redis and handle any possible errors
 	delErr := db.DeleteRedisAccess(token.AccessUUID)
 	if delErr != nil {
-		utils.StaticResponse(c, http.StatusUnauthorized, utils.AuthError)
+		utils.ConstantResponse(c, http.StatusUnauthorized, utils.AuthError)
 		return
 	}
 
-	utils.StaticResponse(c, http.StatusOK, utils.LogoutSuccess)
+	utils.ConstantResponse(c, http.StatusOK, utils.LogoutSuccess)
 	return
 }

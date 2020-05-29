@@ -3,9 +3,9 @@ package db
 import (
 	"errors"
 	"fmt"
-	"time"
 	"go_api_boilerplate/models"
 	"go_api_boilerplate/utils"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
@@ -70,9 +70,9 @@ func GetRedisAccess(access *models.RedisAccess) error {
 // to remove the cached access
 func DeleteRedisAccess(uuid string) error {
 	// Deletes the cached access from Redis and handles any possible errors
-	amountKey, err := client.Del(uuid).Result()
-	if err != nil || amountKey == 0 {
-		return errors.New("key could not be deleted")
+	count, err := client.Del(uuid).Result()
+	if err != nil || count == 0 {
+		return errors.New("redis: no keys in result")
 	}
 
 	return nil

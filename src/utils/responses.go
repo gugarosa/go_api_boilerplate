@@ -8,10 +8,10 @@ func DynamicResponse(c *gin.Context, status int, m map[string]interface{}) {
 	c.JSON(status, m)
 }
 
-// StaticResponse expects a Gin context, a status identifier and a message
+// ConstantResponse expects a Gin context, a status identifier and a message
 // to create the JSON response
-func StaticResponse(c *gin.Context, status int, message string) {
+func ConstantResponse(c *gin.Context, status int, message string) {
 	c.JSON(status, gin.H{
-		"message": message,
+		"response": message,
 	})
 }

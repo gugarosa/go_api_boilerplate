@@ -1,4 +1,4 @@
-package entry
+package auth
 
 import (
 	"go_api_boilerplate/middleware"
@@ -9,11 +9,11 @@ import (
 // CreateRoutes expects a RouterGroup
 // to create a group of common-knowledge routes
 func CreateRoutes(r *gin.RouterGroup) {
-	// Entry-based routes
-	entry := r.Group("/")
+	// Auth-based routes
+	auth := r.Group("/")
 	{
-		entry.POST("/login", login)
-		entry.POST("/register", register)
-		entry.POST("/logout", middleware.AuthGuard(), logout)
+		auth.POST("/login", login)
+		auth.POST("/register", register)
+		auth.POST("/logout", middleware.AuthGuard(), logout)
 	}
 }

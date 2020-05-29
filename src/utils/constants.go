@@ -6,17 +6,29 @@ const AuthError string = "Unauthorized access."
 // DatabaseAlreadyExists constant
 const DatabaseAlreadyExists string = "Document already exists."
 
-// DatabaseNonExists constant
-const DatabaseNonExists string = "Document does not exist."
-
 // DatabaseClientConnected constant
 const DatabaseClientConnected string = "MongoDB client has been connected."
 
-// DatabaseInsertionError constant
-const DatabaseInsertionError string = "Document could not be inserted."
+// DatabaseDeleteError constant
+const DatabaseDeleteError string = "Document could not be deleted."
 
-// DatabaseInsertionSuccess constant
-const DatabaseInsertionSuccess string = "Document succesfully inserted."
+// DatabaseDeleteSuccess constant
+const DatabaseDeleteSuccess string = "Document succesfully deleted."
+
+// DatabaseFindError constant
+const DatabaseFindError string = "Document could not be found."
+
+// DatabaseInsertError constant
+const DatabaseInsertError string = "Document could not be inserted."
+
+// DatabaseInsertSuccess constant
+const DatabaseInsertSuccess string = "Document succesfully inserted."
+
+// DatabaseUpdateError constant
+const DatabaseUpdateError string = "Document could not be updated."
+
+// DatabaseUpdateSuccess constant
+const DatabaseUpdateSuccess string = "Document succesfully updated."
 
 // LoginError constant
 const LoginError string = "Login could not be performed."
@@ -29,3 +41,6 @@ const NoRouteMessage string = "This route is not available."
 
 // RequestError constant
 const RequestError string = "Unexpected request."
+
+// RequestParameterError constant
+const RequestParameterError string = "Unexpected parameter from request."

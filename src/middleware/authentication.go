@@ -160,7 +160,7 @@ func AuthGuard() gin.HandlerFunc {
 		// Checks if token is valid and handle any possible errors
 		err := ValidateToken(c.Request)
 		if err != nil {
-			utils.StaticResponse(c, http.StatusUnauthorized, utils.AuthError)
+			utils.ConstantResponse(c, http.StatusUnauthorized, utils.AuthError)
 			c.Abort()
 			return
 		}
