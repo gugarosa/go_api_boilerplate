@@ -2,7 +2,7 @@ package item
 
 import (
 	"go_api_boilerplate/controllers"
-	"go_api_boilerplate/db"
+	"go_api_boilerplate/database"
 	"go_api_boilerplate/models"
 	"go_api_boilerplate/utils"
 	"net/http"
@@ -38,7 +38,7 @@ func create(c *gin.Context) {
 	item.UpdatedAt = time.Now()
 
 	// Inserts model into collection
-	insertErr := db.InsertOne(db.ItemCollection, item)
+	insertErr := database.InsertOne(database.ItemCollection, item)
 	if utils.LogError(insertErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseInsertError)
 		return
@@ -50,7 +50,7 @@ func create(c *gin.Context) {
 
 func list(c *gin.Context) {
 	// Finds a model in collection with the same inputted ID
-	items, findErr := db.FindAll(db.ItemCollection)
+	items, findErr := database.FindAll(database.ItemCollection)
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseFindError)
 		return
@@ -75,7 +75,7 @@ func find(c *gin.Context) {
 	}
 
 	// Finds a model in collection with the same inputted ID
-	findErr := db.FindOne(db.ItemCollection, bson.M{"_id": id}, &item)
+	findErr := database.FindOne(database.ItemCollection, bson.M{"_id": id}, &item)
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseFindError)
 		return
@@ -104,7 +104,7 @@ func delete(c *gin.Context) {
 	}
 
 	// Deletes a model in collection with the same inputted ID
-	deleteErr := db.DeleteOne(db.ItemCollection, id)
+	deleteErr := database.DeleteOne(database.ItemCollection, id)
 	if utils.LogError(deleteErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseDeleteError)
 		return
@@ -150,7 +150,7 @@ func update(c *gin.Context) {
 	}
 
 	// Updates a model in collection using filter and request data
-	updateErr := db.UpdateOne(db.ItemCollection, id, update)
+	updateErr := database.UpdateOne(database.ItemCollection, id, update)
 	if utils.LogError(updateErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseUpdateError)
 		return

@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"go_api_boilerplate/db"
+	"go_api_boilerplate/database"
 	"go_api_boilerplate/server"
+	"os"
 )
 
 func getConfig() map[string]string {
@@ -29,8 +29,8 @@ func main() {
 	c := getConfig()
 
 	// Initializes the database and the cache
-	db.InitDatabase(fmt.Sprintf("mongodb://%s:%s@%s:%s", c["dbUser"], c["dbPass"], c["dbHost"], c["dbPort"]), c["dbName"])
-	db.InitRedis(c["redisHost"], c["redisPort"], c["redisPass"])
+	database.InitMongo(fmt.Sprintf("mongodb://%s:%s@%s:%s", c["dbUser"], c["dbPass"], c["dbHost"], c["dbPort"]), c["dbName"])
+	database.InitRedis(c["redisHost"], c["redisPort"], c["redisPass"])
 
 	// Initializes the server
 	server.InitServer(c["mode"])

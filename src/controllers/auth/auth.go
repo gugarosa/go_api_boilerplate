@@ -2,7 +2,7 @@ package auth
 
 import (
 	"go_api_boilerplate/controllers"
-	"go_api_boilerplate/db"
+	"go_api_boilerplate/database"
 	"go_api_boilerplate/middleware"
 	"go_api_boilerplate/models"
 	"go_api_boilerplate/utils"
@@ -27,7 +27,7 @@ func login(c *gin.Context) {
 	}
 
 	// Finds a model in collection with the same inputted e-mail
-	findErr := db.FindOne(db.UserCollection, bson.M{"email": inputUser.Email}, &dbUser)
+	findErr := database.FindOne(database.UserCollection, bson.M{"email": inputUser.Email}, &dbUser)
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.LoginError)
 		return
@@ -48,7 +48,7 @@ func login(c *gin.Context) {
 	}
 
 	// Sets the cached accesses in Redis
-	redisErr := db.CreateRedisAccess(dbUser.ID, token)
+	redisErr := database.CreateRedisAccess(dbUser.ID, token)
 	if utils.LogError(redisErr) != nil {
 		utils.ConstantResponse(c, http.StatusUnauthorized, utils.LoginError)
 		return
@@ -73,7 +73,7 @@ func register(c *gin.Context) {
 	}
 
 	// Finds a model in collection with the same inputted e-mail
-	findErr := db.FindOne(db.UserCollection, bson.M{"email": user.Email}, &models.User{})
+	findErr := database.FindOne(database.UserCollection, bson.M{"email": user.Email}, &models.User{})
 	if utils.LogError(findErr) == nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseAlreadyExists)
 		return
@@ -88,7 +88,7 @@ func register(c *gin.Context) {
 	user.UpdatedAt = time.Now()
 
 	// Inserts model into collection
-	insertErr := db.InsertOne(db.UserCollection, user)
+	insertErr := database.InsertOne(database.UserCollection, user)
 	if utils.LogError(insertErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseInsertError)
 		return
@@ -107,7 +107,7 @@ func logout(c *gin.Context) {
 	}
 
 	// Deletes the cached access from Redis and handle any possible errors
-	delErr := db.DeleteRedisAccess(token.AccessUUID)
+	delErr := database.DeleteRedisAccess(token.AccessUUID)
 	if delErr != nil {
 		utils.ConstantResponse(c, http.StatusUnauthorized, utils.AuthError)
 		return

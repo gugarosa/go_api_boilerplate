@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"go_api_boilerplate/db"
+	"go_api_boilerplate/database"
 	"go_api_boilerplate/middleware"
 	"go_api_boilerplate/utils/validators"
 
@@ -20,7 +20,7 @@ func AuthRequest(c *gin.Context) error {
 	}
 
 	// Gets the cached access from Redis and handle any possible errors
-	err = db.GetRedisAccess(token)
+	err = database.GetRedisAccess(token)
 	if err != nil {
 		return err
 	}

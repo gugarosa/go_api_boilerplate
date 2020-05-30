@@ -1,19 +1,19 @@
-package db
+package database
 
 import (
 	"context"
+	"go_api_boilerplate/utils"
 	"log"
 	"time"
-	"go_api_boilerplate/utils"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-// InitDatabase expects an url connection string and a database name
+// InitMongo expects an url connection string and a database name
 // in order to start a MongoDB service
-func InitDatabase(url string, database string) {
+func InitMongo(url string, database string) {
 	// Creates a new MongoDB client, sets context and connects
 	client, _ := mongo.NewClient(options.Client().ApplyURI(url))
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
