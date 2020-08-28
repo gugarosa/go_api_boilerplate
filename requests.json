@@ -111,7 +111,7 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "item",
+			"name": "product",
 			"item": [
 				{
 					"name": "create",
@@ -130,7 +130,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Item\"\n}",
+							"raw": "{\n\t\"name\": \"Product\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -138,14 +138,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/v1/item",
+							"raw": "localhost:8080/v1/product",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"v1",
-								"item"
+								"product"
 							]
 						}
 					},
@@ -160,14 +160,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/v1/item/",
+							"raw": "localhost:8080/v1/product/",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"v1",
-								"item",
+								"product",
 								""
 							]
 						}
@@ -183,14 +183,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/v1/item/5ed0159d196291f0428c387a",
+							"raw": "localhost:8080/v1/product/5ed0159d196291f0428c387a",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"v1",
-								"item",
+								"product",
 								"5ed0159d196291f0428c387a"
 							]
 						}
@@ -213,14 +213,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/v1/item/5ed015a1196291f0428c387b",
+							"raw": "localhost:8080/v1/product/5ed015a1196291f0428c387b",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"v1",
-								"item",
+								"product",
 								"5ed015a1196291f0428c387b"
 							]
 						}
@@ -244,7 +244,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"UpdatedItem\"\n}",
+							"raw": "{\n\t\"name\": \"UpdatedProduct\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -252,14 +252,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/v1/item/5ed14f411b5025782c9721fd",
+							"raw": "localhost:8080/v1/product/5ed14f411b5025782c9721fd",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"v1",
-								"item",
+								"product",
 								"5ed14f411b5025782c9721fd"
 							]
 						}

@@ -1,4 +1,4 @@
-package item
+package product
 
 import (
 	"go_api_boilerplate/controllers"
@@ -16,8 +16,8 @@ import (
 )
 
 func create(c *gin.Context) {
-	// Creates an empty Item model variable
-	var item models.Item
+	// Creates an empty Product model variable
+	var product models.Product
 
 	// Authenticates the request and handle any possible errors
 	authErr := controllers.AuthRequest(c)
@@ -27,18 +27,18 @@ func create(c *gin.Context) {
 	}
 
 	// Binds and validates the model, and handles any possible errors
-	checkErr := controllers.BindAndValidateRequest(c, &item)
+	checkErr := controllers.BindAndValidateRequest(c, &product)
 	if utils.LogError(checkErr) != nil {
 		utils.ConstantResponse(c, http.StatusBadRequest, utils.RequestError)
 		return
 	}
 
 	// Declares new properties
-	item.CreatedAt = time.Now()
-	item.UpdatedAt = time.Now()
+	product.CreatedAt = time.Now()
+	product.UpdatedAt = time.Now()
 
 	// Inserts model into collection
-	insertErr := database.InsertOne(database.ItemCollection, item)
+	insertErr := database.InsertOne(database.ProductCollection, product)
 	if utils.LogError(insertErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseInsertError)
 		return
@@ -50,14 +50,14 @@ func create(c *gin.Context) {
 
 func list(c *gin.Context) {
 	// Finds a model in collection with the same inputted ID
-	items, findErr := database.FindAll(database.ItemCollection)
+	products, findErr := database.FindAll(database.ProductCollection)
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseFindError)
 		return
 	}
 
 	utils.DynamicResponse(c, http.StatusOK, gin.H{
-		"response": items,
+		"response": products,
 	})
 	return
 
@@ -65,7 +65,7 @@ func list(c *gin.Context) {
 
 func find(c *gin.Context) {
 	// Creates variable to hold the found model
-	var item bson.M
+	var product bson.M
 
 	// Gathers the string ID as an ObjectID
 	id, hexErr := primitive.ObjectIDFromHex(c.Param("id"))
@@ -75,14 +75,14 @@ func find(c *gin.Context) {
 	}
 
 	// Finds a model in collection with the same inputted ID
-	findErr := database.FindOne(database.ItemCollection, bson.M{"_id": id}, &item)
+	findErr := database.FindOne(database.ProductCollection, bson.M{"_id": id}, &product)
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseFindError)
 		return
 	}
 
 	utils.DynamicResponse(c, http.StatusOK, gin.H{
-		"response": item,
+		"response": product,
 	})
 	return
 
@@ -104,7 +104,7 @@ func delete(c *gin.Context) {
 	}
 
 	// Deletes a model in collection with the same inputted ID
-	deleteErr := database.DeleteOne(database.ItemCollection, id)
+	deleteErr := database.DeleteOne(database.ProductCollection, id)
 	if utils.LogError(deleteErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseDeleteError)
 		return
@@ -115,8 +115,8 @@ func delete(c *gin.Context) {
 }
 
 func update(c *gin.Context) {
-	// Creates an empty Item model variable
-	var item models.Item
+	// Creates an empty Product model variable
+	var product models.Product
 
 	// Authenticates the request and handle any possible errors
 	authErr := controllers.AuthRequest(c)
@@ -133,24 +133,24 @@ func update(c *gin.Context) {
 	}
 
 	// Binds and validates the model, and handles any possible errors
-	checkErr := controllers.BindAndValidateRequest(c, &item)
+	checkErr := controllers.BindAndValidateRequest(c, &product)
 	if utils.LogError(checkErr) != nil {
 		utils.ConstantResponse(c, http.StatusBadRequest, utils.RequestError)
 		return
 	}
 
 	// Declares new properties
-	item.UpdatedAt = time.Now()
+	product.UpdatedAt = time.Now()
 
 	// Decodes the structure into an update document
-	update, decodeErr := controllers.DecodeStruct(item)
+	update, decodeErr := controllers.DecodeStruct(product)
 	if utils.LogError(decodeErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.RequestError)
 		return
 	}
 
 	// Updates a model in collection using filter and request data
-	updateErr := database.UpdateOne(database.ItemCollection, id, update)
+	updateErr := database.UpdateOne(database.ProductCollection, id, update)
 	if utils.LogError(updateErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseUpdateError)
 		return

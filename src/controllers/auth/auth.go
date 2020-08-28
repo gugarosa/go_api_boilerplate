@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"go_api_boilerplate/controllers"
 	"go_api_boilerplate/database"
 	"go_api_boilerplate/middleware"
@@ -59,6 +60,21 @@ func login(c *gin.Context) {
 		"refresh_token": token.RefreshToken,
 	})
 	return
+}
+
+func refresh(c *gin.Context) {
+	// Creates a token variable
+	var token models.Token
+
+	// Binds and validates the model, and handles any possible errors
+	checkErr := controllers.BindAndValidateRequest(c, &token)
+	if utils.LogError(checkErr) != nil {
+		utils.ConstantResponse(c, http.StatusBadRequest, utils.RequestError)
+		return
+	}
+
+	fmt.Println(token.RefreshToken)
+
 }
 
 func register(c *gin.Context) {

@@ -13,6 +13,7 @@ func CreateRoutes(r *gin.RouterGroup) {
 	auth := r.Group("/")
 	{
 		auth.POST("/login", login)
+		auth.POST("/refresh", refresh)
 		auth.POST("/register", register)
 		auth.POST("/logout", middleware.AuthGuard(), logout)
 	}

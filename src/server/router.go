@@ -2,7 +2,7 @@ package server
 
 import (
 	"go_api_boilerplate/controllers/auth"
-	"go_api_boilerplate/controllers/item"
+	"go_api_boilerplate/controllers/product"
 	"go_api_boilerplate/utils"
 	"net/http"
 
@@ -17,8 +17,8 @@ func InitRouter(r *gin.Engine) {
 		// Auth-related routes, i.e., login, register and logout
 		auth.CreateRoutes(v1)
 
-		// Item-related routes
-		item.CreateRoutes(v1)
+		// Product-related routes
+		product.CreateRoutes(v1)
 	}
 
 	// Non-existing routes
