@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"go_api_boilerplate/controllers"
 	"go_api_boilerplate/database"
 	"go_api_boilerplate/middleware"
@@ -63,17 +62,40 @@ func login(c *gin.Context) {
 }
 
 func refresh(c *gin.Context) {
-	// Creates a token variable
-	var token models.Token
-
-	// Binds and validates the model, and handles any possible errors
-	checkErr := controllers.BindAndValidateRequest(c, &token)
-	if utils.LogError(checkErr) != nil {
-		utils.ConstantResponse(c, http.StatusBadRequest, utils.RequestError)
+	// Gets the refresh token from request and handle any possible errors
+	refreshUUID, userID, getErr := middleware.GetRefreshTokenData(c)
+	if utils.LogError(getErr) != nil {
+		utils.ConstantResponse(c, http.StatusUnauthorized, utils.AuthError)
 		return
 	}
 
-	fmt.Println(token.RefreshToken)
+	println(refreshUUID, userID.Hex())
+
+	redisErr := database.DeleteRedisAccess(refreshUUID)
+	if utils.LogError(redisErr) != nil {
+		utils.ConstantResponse(c, http.StatusUnauthorized, utils.RefreshError)
+		return
+	}
+
+	// Creates new authentication tokens
+	token, tokenErr := middleware.CreateToken(userID)
+	if utils.LogError(tokenErr) != nil {
+		utils.ConstantResponse(c, http.StatusUnauthorized, utils.LoginError)
+		return
+	}
+
+	// Sets the cached accesses in Redis
+	redisErr = database.CreateRedisAccess(userID, token)
+	if utils.LogError(redisErr) != nil {
+		utils.ConstantResponse(c, http.StatusUnauthorized, utils.LoginError)
+		return
+	}
+
+	utils.DynamicResponse(c, http.StatusOK, gin.H{
+		"access_token":  token.AccessToken,
+		"refresh_token": token.RefreshToken,
+	})
+	return
 
 }
 

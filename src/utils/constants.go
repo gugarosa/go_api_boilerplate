@@ -39,6 +39,9 @@ const LogoutSuccess string = "Logout has been successful."
 // NoRouteMessage constant
 const NoRouteMessage string = "This route is not available."
 
+// RefreshError constant
+const RefreshError string = "Refresh could not be performed."
+
 // RequestError constant
 const RequestError string = "Unexpected request."
 
