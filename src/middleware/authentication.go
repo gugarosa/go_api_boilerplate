@@ -2,12 +2,12 @@ package middleware
 
 import (
 	"fmt"
+	"go_api_boilerplate/models"
+	"go_api_boilerplate/utils"
 	"net/http"
 	"os"
 	"strings"
 	"time"
-	"go_api_boilerplate/models"
-	"go_api_boilerplate/utils"
 
 	"github.com/gin-gonic/gin"
 
@@ -118,7 +118,7 @@ func GetTokenData(r *http.Request) (*models.RedisAccess, error) {
 	// Gathers the token metadata and its validation
 	claims, valid := token.Claims.(jwt.MapClaims)
 
-	// Checks whether token is valid and handle any possible errors
+	// Checks whether token is valid and handles any possible errors
 	if valid && token.Valid {
 		accessUUID, valid := claims["access_uuid"].(string)
 		if !valid {
@@ -138,13 +138,13 @@ func GetTokenData(r *http.Request) (*models.RedisAccess, error) {
 // ValidateToken expects an incoming request
 // to verify whether token is valid or not
 func ValidateToken(r *http.Request) error {
-	// Gathers an already-verified token and handle any possible errors
+	// Gathers an already-verified token and handles any possible errors
 	token, err := VerifyToken(r)
 	if err != nil {
 		return err
 	}
 
-	// Checks whether token valid and handle any possible errors
+	// Checks whether token valid and handles any possible errors
 	_, valid := token.Claims.(jwt.Claims)
 	if !valid && !token.Valid {
 		return err

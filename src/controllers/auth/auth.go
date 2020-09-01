@@ -62,15 +62,14 @@ func login(c *gin.Context) {
 }
 
 func refresh(c *gin.Context) {
-	// Gets the refresh token from request and handle any possible errors
+	// Gets the refresh token from context and handle any possible errors
 	refreshUUID, userID, getErr := middleware.GetRefreshTokenData(c)
 	if utils.LogError(getErr) != nil {
 		utils.ConstantResponse(c, http.StatusUnauthorized, utils.AuthError)
 		return
 	}
 
-	println(refreshUUID, userID.Hex())
-
+	// Deletes the cached accesses in Redis
 	redisErr := database.DeleteRedisAccess(refreshUUID)
 	if utils.LogError(redisErr) != nil {
 		utils.ConstantResponse(c, http.StatusUnauthorized, utils.RefreshError)
@@ -80,14 +79,14 @@ func refresh(c *gin.Context) {
 	// Creates new authentication tokens
 	token, tokenErr := middleware.CreateToken(userID)
 	if utils.LogError(tokenErr) != nil {
-		utils.ConstantResponse(c, http.StatusUnauthorized, utils.LoginError)
+		utils.ConstantResponse(c, http.StatusUnauthorized, utils.RefreshError)
 		return
 	}
 
 	// Sets the cached accesses in Redis
 	redisErr = database.CreateRedisAccess(userID, token)
 	if utils.LogError(redisErr) != nil {
-		utils.ConstantResponse(c, http.StatusUnauthorized, utils.LoginError)
+		utils.ConstantResponse(c, http.StatusUnauthorized, utils.RefreshError)
 		return
 	}
 

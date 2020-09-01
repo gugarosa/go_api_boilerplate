@@ -52,7 +52,7 @@ func VerifyRefreshToken(c *gin.Context) (*jwt.Token, error) {
 }
 
 // GetRefreshTokenData expects an incoming context
-// to verify whether refresh token is valid or not
+// to get refresh token meta-data
 func GetRefreshTokenData(c *gin.Context) (string, primitive.ObjectID, error) {
 	// Gathers an already-verified token and handle any possible errors
 	token, err := VerifyRefreshToken(c)
@@ -63,15 +63,12 @@ func GetRefreshTokenData(c *gin.Context) (string, primitive.ObjectID, error) {
 	// Gathers the refresh token metadata and its validation
 	claims, valid := token.Claims.(jwt.MapClaims)
 
-	// Checks whether token is valid and handle any possible errors
+	// Checks whether refresh token is valid and handles any possible errors
 	if valid && token.Valid {
 		refreshUUID, valid := claims["refresh_uuid"].(string)
-		if !valid {
-			return "", primitive.NilObjectID, err
-		}
-
 		userID, err := primitive.ObjectIDFromHex(claims["id"].(string))
-		if err != nil {
+
+		if !valid || err != nil {
 			return "", primitive.NilObjectID, err
 		}
 
