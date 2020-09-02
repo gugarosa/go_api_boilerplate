@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1e70e6a7-db2e-40f8-8d4d-19bd2573f93a",
+		"_postman_id": "1c976b79-b464-4a0f-92a4-e542dd2119c9",
 		"name": "boilerplate",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -38,6 +38,41 @@
 							"path": [
 								"v1",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTk2NzY2MTAsImlkIjoiNWY0OTBjMGZlY2RjODNhOGJjNDY0NTMwIiwicmVmcmVzaF91dWlkIjoiNDAyNGU1YzUtYzkxZi00YjBlLWFkNWEtMzUxNDNiYzBmYmVmIn0.qsLF940vXLuoSvFcjgoti3N0xHzYYBhlf1QnPYhnMMk\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/v1/refresh",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"refresh"
 							]
 						}
 					},
@@ -121,7 +156,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImU2MjhhNzRkLWFmMmUtNDZhNC1iMjYyLTE0ZGUwNTA1ODkwMCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTU5MDc3NjE1MSwiaWQiOiI1ZWQwMTU3ZDE5NjI5MWYwNDI4YzM4NzkifQ.0itSgo_VDmDFRd04x6DsvaMV0CnFo55-Y98dcWzX9-Y",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IjMzNjkxODYyLWVkOTYtNGIzYy1hOWM4LTExMDllODM5NjI1MCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTU5OTA3Mjg0NywiaWQiOiI1ZjQ5MGMwZmVjZGM4M2E4YmM0NjQ1MzAifQ.R9kIrs8Q7xof8GLyksgsMHRQ0gP18XrQuPgTfycD_Sw",
 									"type": "string"
 								}
 							]
@@ -130,7 +165,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Product\"\n}",
+							"raw": "{\n\t\"name\": \"Product\",\n    \"brand\": \"Golang\",\n    \"category\": \"category\",\n    \"summary\": \"A short-length description\",\n    \"description\": \"A full-length description about the product ...\",\n    \"image\": \"image_url\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -160,15 +195,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/v1/product/",
+							"raw": "localhost:8080/v1/product",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"v1",
-								"product",
-								""
+								"product"
 							]
 						}
 					},
@@ -261,6 +295,164 @@
 								"v1",
 								"product",
 								"5ed14f411b5025782c9721fd"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "survey",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IjMzNjkxODYyLWVkOTYtNGIzYy1hOWM4LTExMDllODM5NjI1MCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTU5OTA3Mjg0NywiaWQiOiI1ZjQ5MGMwZmVjZGM4M2E4YmM0NjQ1MzAifQ.R9kIrs8Q7xof8GLyksgsMHRQ0gP18XrQuPgTfycD_Sw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Survey\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/v1/survey",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/survey",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/survey/5ed0159d196291f0428c387a",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"survey",
+								"5ed0159d196291f0428c387a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImZiZmU5MTVkLTZiNGQtNGI3OC05NWQ5LTViMGI4ZmZhYzRiMSIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTU5MDc3NDUyNywiaWQiOiI1ZWQwMTU3ZDE5NjI5MWYwNDI4YzM4NzkifQ.YxdAscLxJjtNwKxocaFsZnrGzt2MjO4xQ33fkU3YAJo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/v1/survey/5ed015a1196291f0428c387b",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"survey",
+								"5ed015a1196291f0428c387b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IjMzNjkxODYyLWVkOTYtNGIzYy1hOWM4LTExMDllODM5NjI1MCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTU5OTA3Mjg0NywiaWQiOiI1ZjQ5MGMwZmVjZGM4M2E4YmM0NjQ1MzAifQ.R9kIrs8Q7xof8GLyksgsMHRQ0gP18XrQuPgTfycD_Sw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"UpdatedSurvey\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/v1/survey/5f4fe85aa80f2c3730a8bc64",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"survey",
+								"5f4fe85aa80f2c3730a8bc64"
 							]
 						}
 					},
