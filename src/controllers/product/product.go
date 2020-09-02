@@ -34,6 +34,7 @@ func create(c *gin.Context) {
 	}
 
 	// Declares new properties
+	product.Active = true
 	product.CreatedAt = time.Now()
 	product.UpdatedAt = time.Now()
 
