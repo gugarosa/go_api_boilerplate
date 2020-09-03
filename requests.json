@@ -156,7 +156,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImI4OWJjOWQwLTA4ZDUtNDQyMC04Njg5LTYwOWRiNjM4OTBjYiIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTU5OTE0NzAyMywiaWQiOiI1ZjQ5MGMwZmVjZGM4M2E4YmM0NjQ1MzAifQ.42t1gW6_ygjTZz30jH0LYLH8zuGTp5_8ui4XbWa2J2U",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImJjZjRjMzA4LWQ1NzQtNDYzZS04OTYyLTMxNjEwMDliNGQxOCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTU5OTE1NzYwMywiaWQiOiI1ZjQ5MGMwZmVjZGM4M2E4YmM0NjQ1MzAifQ.VHhDcW8wRMy7-qf4w99EcFtt2Nw-TRWqBB50E7Y8oPE",
 									"type": "string"
 								}
 							]
@@ -314,7 +314,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IjJmZjVkNjQ2LTQxNzctNDcxMi04NTEzLTcyM2QyZWUzMGMzMyIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTU5OTE0NzIzMiwiaWQiOiI1ZjQ5MGMwZmVjZGM4M2E4YmM0NjQ1MzAifQ.ToarqO0usyvtG5WJ8yTSuqjMqRXhrLZjwFq-1KQ5kEI",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImJjZjRjMzA4LWQ1NzQtNDYzZS04OTYyLTMxNjEwMDliNGQxOCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTU5OTE1NzYwMywiaWQiOiI1ZjQ5MGMwZmVjZGM4M2E4YmM0NjQ1MzAifQ.VHhDcW8wRMy7-qf4w99EcFtt2Nw-TRWqBB50E7Y8oPE",
 									"type": "string"
 								}
 							]
@@ -323,7 +323,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Product\",\n    \"brand\": \"Golang\",\n    \"category\": \"5f5108940e0040783c6c15d7\",\n    \"summary\": \"A short-length description\",\n    \"description\": \"A full-length description about the product ...\",\n    \"image\": \"image_url\",\n    \"tags\": [\n        \"5f5108da0e0040783c6c15d8\",\n        \"5f5108db0e0040783c6c15d9\"\n    ]\n}",
+							"raw": "{\n\t\"name\": \"Product\",\n    \"brand\": \"Golang\",\n    \"categories\": [\n        \"5f5108940e0040783c6c15d7\",\n        \"5f5131ebd5f4c697ebd9ccec\"\n    ],\n    \"summary\": \"A short-length description\",\n    \"description\": \"A full-length description about the product ...\",\n    \"image\": \"image_url\",\n    \"tags\": [\n        \"5f5108da0e0040783c6c15d8\",\n        \"5f5108db0e0040783c6c15d9\"\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -375,7 +375,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/v1/product/5f5109630e0040783c6c15da",
+							"raw": "localhost:8080/v1/product/5f51321cd5f4c697ebd9cced",
 							"host": [
 								"localhost"
 							],
@@ -383,7 +383,7 @@
 							"path": [
 								"v1",
 								"product",
-								"5f5109630e0040783c6c15da"
+								"5f51321cd5f4c697ebd9cced"
 							]
 						}
 					},
