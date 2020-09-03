@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -44,8 +43,6 @@ func FindAll(collection *mongo.Collection) ([]bson.M, error) {
 		if err != nil {
 			return nil, err
 		}
-
-		fmt.Println(model["tags"])
 
 		// Appends the model to the list
 		models = append(models, model)
