@@ -2,6 +2,9 @@ package database
 
 import "go.mongodb.org/mongo-driver/mongo"
 
+// CategoryCollection global variable
+var CategoryCollection *mongo.Collection
+
 // ProductCollection global variable
 var ProductCollection *mongo.Collection
 
@@ -17,6 +20,7 @@ var UserCollection *mongo.Collection
 // SetCollections expects a MongoDB database as parameter and sets in the scope
 // variables to the desired collections
 func SetCollections(c *mongo.Database) {
+	CategoryCollection = c.Collection("categories")
 	ProductCollection = c.Collection("products")
 	SurveyCollection = c.Collection("surveys")
 	TagCollection = c.Collection("tags")
