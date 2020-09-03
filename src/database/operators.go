@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -29,6 +30,44 @@ func FindAll(collection *mongo.Collection) ([]bson.M, error) {
 
 	// Finds all models in the database and handles any possible errors
 	cursor, err := collection.Find(context.Background(), bson.M{})
+	if err != nil {
+		return nil, err
+	}
+
+	// Iterates over the cursor, i.e., list of documents
+	for cursor.Next(context.Background()) {
+		// Creates a document
+		var model bson.M
+
+		// Decodes the document and handles any possible errors
+		err := cursor.Decode(&model)
+		if err != nil {
+			return nil, err
+		}
+
+		fmt.Println(model["tags"])
+
+		// Appends the model to the list
+		models = append(models, model)
+	}
+
+	// Closes the iterator
+	cursor.Close(context.Background())
+
+	return models, nil
+}
+
+// FindAllAggregated expects a collection and a model in order to find
+// all documents along with an aggregated field into the database
+func FindAllAggregated(collection *mongo.Collection, reference string) ([]bson.M, error) {
+	// Creates a slice of documents
+	var models []bson.M
+
+	// Defines an aggregation operator
+	lookup := []bson.M{bson.M{"$lookup": bson.M{"from": reference, "localField": reference, "foreignField": "_id", "as": reference}}}
+
+	// Finds all models in the database and handles any possible errors
+	cursor, err := collection.Aggregate(context.Background(), lookup)
 	if err != nil {
 		return nil, err
 	}
