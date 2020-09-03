@@ -50,8 +50,14 @@ func create(c *gin.Context) {
 }
 
 func list(c *gin.Context) {
-	// Finds a model in collection with the same inputted ID
-	products, findErr := database.FindAllAggregated(database.ProductCollection, "tags")
+	// Defines the aggregation pipeline
+	pipeline := []bson.M{
+		bson.M{"$lookup": bson.M{"from": "tags", "localField": "tags", "foreignField": "_id", "as": "tags"}},
+		bson.M{"$lookup": bson.M{"from": "categories", "localField": "categories", "foreignField": "_id", "as": "categories"}},
+	}
+
+	// Finds models in collection using the defined pipeline
+	products, findErr := database.FindAllWithAggregate(database.ProductCollection, pipeline)
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseFindError)
 		return
@@ -65,9 +71,6 @@ func list(c *gin.Context) {
 }
 
 func find(c *gin.Context) {
-	// Creates variable to hold the found model
-	var product bson.M
-
 	// Gathers the string ID as an ObjectID
 	id, hexErr := primitive.ObjectIDFromHex(c.Param("id"))
 	if utils.LogError(hexErr) != nil {
@@ -75,8 +78,15 @@ func find(c *gin.Context) {
 		return
 	}
 
+	// Defines the aggregation pipeline
+	pipeline := []bson.M{
+		bson.M{"$match": bson.M{"_id": id}},
+		bson.M{"$lookup": bson.M{"from": "tags", "localField": "tags", "foreignField": "_id", "as": "tags"}},
+		bson.M{"$lookup": bson.M{"from": "categories", "localField": "categories", "foreignField": "_id", "as": "categories"}},
+	}
+
 	// Finds a model in collection with the same inputted ID
-	findErr := database.FindOne(database.ProductCollection, bson.M{"_id": id}, &product)
+	product, findErr := database.FindOneWithAggregate(database.ProductCollection, pipeline)
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseFindError)
 		return

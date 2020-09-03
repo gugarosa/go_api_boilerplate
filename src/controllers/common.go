@@ -66,3 +66,21 @@ func DecodeStruct(s interface{}) (bson.M, error) {
 
 	return decoded, nil
 }
+
+// EncodeStruct expects a BSON document and an interface (struct)
+// to encode it back to the struct
+func EncodeStruct(m bson.M, encoded interface{}) error {
+	// Marshalling the input BSON
+	decoded, err := bson.Marshal(m)
+	if err != nil {
+		return err
+	}
+
+	// Unmarshalling the encoded object
+	err = bson.Unmarshal(decoded, encoded)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

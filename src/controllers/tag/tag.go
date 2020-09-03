@@ -49,7 +49,7 @@ func create(c *gin.Context) {
 }
 
 func list(c *gin.Context) {
-	// Finds a model in collection with the same inputted ID
+	// Finds models in collection
 	tags, findErr := database.FindAll(database.TagCollection)
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseFindError)
@@ -64,9 +64,6 @@ func list(c *gin.Context) {
 }
 
 func find(c *gin.Context) {
-	// Creates variable to hold the found model
-	var tag bson.M
-
 	// Gathers the string ID as an ObjectID
 	id, hexErr := primitive.ObjectIDFromHex(c.Param("id"))
 	if utils.LogError(hexErr) != nil {
@@ -75,7 +72,7 @@ func find(c *gin.Context) {
 	}
 
 	// Finds a model in collection with the same inputted ID
-	findErr := database.FindOne(database.TagCollection, bson.M{"_id": id}, &tag)
+	tag, findErr := database.FindOne(database.TagCollection, bson.M{"_id": id})
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseFindError)
 		return

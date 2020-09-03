@@ -27,7 +27,7 @@ type Product struct {
 	ID          primitive.ObjectID   `bson:"_id,omitempty"`
 	Name        string               `bson:"name" json:"name" validate:"required"`
 	Brand       string               `bson:"brand" json:"brand" validate:"required"`
-	Category    primitive.ObjectID   `bson:"category" json:"category" validate:"required"`
+	Categories  []primitive.ObjectID `bson:"categories" json:"categories" validate:"required"`
 	Summary     string               `bson:"summary" json:"summary"`
 	Description string               `bson:"description" json:"description"`
 	Image       string               `bson:"image" json:"image"`

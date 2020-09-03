@@ -27,9 +27,16 @@ func login(c *gin.Context) {
 	}
 
 	// Finds a model in collection with the same inputted e-mail
-	findErr := database.FindOne(database.UserCollection, bson.M{"email": inputUser.Email}, &dbUser)
+	user, findErr := database.FindOne(database.UserCollection, bson.M{"email": inputUser.Email})
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.LoginError)
+		return
+	}
+
+	// Encodes the document into a structure
+	decodeErr := controllers.EncodeStruct(user, &dbUser)
+	if utils.LogError(decodeErr) != nil {
+		utils.ConstantResponse(c, http.StatusInternalServerError, utils.RequestError)
 		return
 	}
 
@@ -110,7 +117,7 @@ func register(c *gin.Context) {
 	}
 
 	// Finds a model in collection with the same inputted e-mail
-	findErr := database.FindOne(database.UserCollection, bson.M{"email": user.Email}, &models.User{})
+	_, findErr := database.FindOne(database.UserCollection, bson.M{"email": user.Email})
 	if utils.LogError(findErr) == nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseAlreadyExists)
 		return

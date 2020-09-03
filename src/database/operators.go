@@ -21,7 +21,7 @@ func DeleteOne(collection *mongo.Collection, id primitive.ObjectID) error {
 	return nil
 }
 
-// FindAll expects a collection and a model in order to find
+// FindAll expects a collection in order to find
 // all documents into the database
 func FindAll(collection *mongo.Collection) ([]bson.M, error) {
 	// Creates a slice of documents
@@ -54,17 +54,14 @@ func FindAll(collection *mongo.Collection) ([]bson.M, error) {
 	return models, nil
 }
 
-// FindAllAggregated expects a collection and a model in order to find
-// all documents along with an aggregated field into the database
-func FindAllAggregated(collection *mongo.Collection, reference string) ([]bson.M, error) {
+// FindAllWithAggregate expects a collection and an aggregation slice in order to find
+// all documents into the database
+func FindAllWithAggregate(collection *mongo.Collection, pipeline []bson.M) ([]bson.M, error) {
 	// Creates a slice of documents
 	var models []bson.M
 
-	// Defines an aggregation operator
-	lookup := []bson.M{bson.M{"$lookup": bson.M{"from": reference, "localField": reference, "foreignField": "_id", "as": reference}}}
-
 	// Finds all models in the database and handles any possible errors
-	cursor, err := collection.Aggregate(context.Background(), lookup)
+	cursor, err := collection.Aggregate(context.Background(), pipeline)
 	if err != nil {
 		return nil, err
 	}
@@ -90,17 +87,49 @@ func FindAllAggregated(collection *mongo.Collection, reference string) ([]bson.M
 	return models, nil
 }
 
-// FindOne expects a collection, a filter and a model in order to find
+// FindOne expects a collection and a filter in order to find
 // a single document into the database
-func FindOne(collection *mongo.Collection, filter bson.M, model interface{}) error {
+func FindOne(collection *mongo.Collection, filter bson.M) (bson.M, error) {
+	// Creates a document
+	var model bson.M
+
 	// Finds a model in the database and handles any possible errors
 	// Note that it returns `nil` if model has been found
-	err := collection.FindOne(context.Background(), filter).Decode(model)
+	err := collection.FindOne(context.Background(), filter).Decode(&model)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return model, nil
+}
+
+// FindOneWithAggregate expects a collection and a pipeline in order to find
+// a single document into the database
+func FindOneWithAggregate(collection *mongo.Collection, pipeline []bson.M) (bson.M, error) {
+	// Creates a document
+	var model bson.M
+
+	// Finds a model in the database and handles any possible errors
+	// Note that it returns `nil` if model has been found
+	cursor, err := collection.Aggregate(context.Background(), pipeline)
+	if err != nil {
+		return nil, err
+	}
+
+	// Iterates over the cursor, i.e., list of documents
+	for cursor.Next(context.Background()) {
+		// Decodes the document and handles any possible errors
+		err := cursor.Decode(&model)
+		if err != nil {
+			return nil, err
+		}
+
+	}
+
+	// Closes the iterator
+	cursor.Close(context.Background())
+
+	return model, nil
 }
 
 // InsertOne expects a collection and a model in order to insert
