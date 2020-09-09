@@ -4,6 +4,7 @@ import (
 	"go_api_boilerplate/controllers/auth"
 	"go_api_boilerplate/controllers/category"
 	"go_api_boilerplate/controllers/product"
+	"go_api_boilerplate/controllers/question"
 	"go_api_boilerplate/controllers/survey"
 	"go_api_boilerplate/controllers/tag"
 	"go_api_boilerplate/utils"
@@ -25,6 +26,9 @@ func InitRouter(r *gin.Engine) {
 
 		// Product-related routes
 		product.CreateRoutes(v1)
+
+		// Question-related routes
+		question.CreateRoutes(v1)
 
 		// Survey-related routes
 		survey.CreateRoutes(v1)

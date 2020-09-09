@@ -8,6 +8,9 @@ var CategoryCollection *mongo.Collection
 // ProductCollection global variable
 var ProductCollection *mongo.Collection
 
+// QuestionCollection global variable
+var QuestionCollection *mongo.Collection
+
 // SurveyCollection global variable
 var SurveyCollection *mongo.Collection
 
@@ -22,6 +25,7 @@ var UserCollection *mongo.Collection
 func SetCollections(c *mongo.Database) {
 	CategoryCollection = c.Collection("categories")
 	ProductCollection = c.Collection("products")
+	QuestionCollection = c.Collection("questions")
 	SurveyCollection = c.Collection("surveys")
 	TagCollection = c.Collection("tags")
 	UserCollection = c.Collection("users")

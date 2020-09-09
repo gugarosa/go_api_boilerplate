@@ -1,4 +1,4 @@
-package survey
+package question
 
 import (
 	"go_api_boilerplate/controllers"
@@ -16,8 +16,8 @@ import (
 )
 
 func create(c *gin.Context) {
-	// Creates an empty Survey model variable
-	var survey models.Survey
+	// Creates an empty Question model variable
+	var question models.Question
 
 	// Authenticates the request and handle any possible errors
 	authErr := controllers.AuthRequest(c)
@@ -27,19 +27,19 @@ func create(c *gin.Context) {
 	}
 
 	// Binds and validates the model, and handles any possible errors
-	checkErr := controllers.BindAndValidateRequest(c, &survey)
+	checkErr := controllers.BindAndValidateRequest(c, &question)
 	if utils.LogError(checkErr) != nil {
 		utils.ConstantResponse(c, http.StatusBadRequest, utils.RequestError)
 		return
 	}
 
 	// Declares new properties
-	survey.Active = true
-	survey.CreatedAt = time.Now()
-	survey.UpdatedAt = time.Now()
+	question.Active = true
+	question.CreatedAt = time.Now()
+	question.UpdatedAt = time.Now()
 
 	// Inserts model into collection
-	insertErr := database.InsertOne(database.SurveyCollection, survey)
+	insertErr := database.InsertOne(database.QuestionCollection, question)
 	if utils.LogError(insertErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseInsertError)
 		return
@@ -52,19 +52,18 @@ func create(c *gin.Context) {
 func list(c *gin.Context) {
 	// Defines the aggregation pipeline
 	pipeline := []bson.M{
-		bson.M{"$lookup": bson.M{"from": "questions", "localField": "questions", "foreignField": "_id", "as": "questions"}},
-		bson.M{"$lookup": bson.M{"from": "tags", "localField": "questions.tags", "foreignField": "_id", "as": "questions.tags"}},
+		bson.M{"$lookup": bson.M{"from": "tags", "localField": "tags", "foreignField": "_id", "as": "tags"}},
 	}
 
 	// Finds models in collection using the defined pipeline
-	surveys, findErr := database.FindAllWithAggregate(database.SurveyCollection, pipeline)
+	questions, findErr := database.FindAllWithAggregate(database.QuestionCollection, pipeline)
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseFindError)
 		return
 	}
 
 	utils.DynamicResponse(c, http.StatusOK, gin.H{
-		"response": surveys,
+		"response": questions,
 	})
 	return
 
@@ -81,19 +80,18 @@ func find(c *gin.Context) {
 	// Defines the aggregation pipeline
 	pipeline := []bson.M{
 		bson.M{"$match": bson.M{"_id": id}},
-		bson.M{"$lookup": bson.M{"from": "questions", "localField": "questions", "foreignField": "_id", "as": "questions"}},
-		bson.M{"$lookup": bson.M{"from": "tags", "localField": "questions.tags", "foreignField": "_id", "as": "questions.tags"}},
+		bson.M{"$lookup": bson.M{"from": "tags", "localField": "tags", "foreignField": "_id", "as": "tags"}},
 	}
 
 	// Finds a model in collection with the same inputted ID
-	survey, findErr := database.FindOneWithAggregate(database.SurveyCollection, pipeline)
+	question, findErr := database.FindOneWithAggregate(database.QuestionCollection, pipeline)
 	if utils.LogError(findErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseFindError)
 		return
 	}
 
 	utils.DynamicResponse(c, http.StatusOK, gin.H{
-		"response": survey,
+		"response": question,
 	})
 	return
 
@@ -115,7 +113,7 @@ func delete(c *gin.Context) {
 	}
 
 	// Deletes a model in collection with the same inputted ID
-	deleteErr := database.DeleteOne(database.SurveyCollection, id)
+	deleteErr := database.DeleteOne(database.QuestionCollection, id)
 	if utils.LogError(deleteErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseDeleteError)
 		return
@@ -126,8 +124,8 @@ func delete(c *gin.Context) {
 }
 
 func update(c *gin.Context) {
-	// Creates an empty Survey model variable
-	var survey models.Survey
+	// Creates an empty Question model variable
+	var question models.Question
 
 	// Authenticates the request and handle any possible errors
 	authErr := controllers.AuthRequest(c)
@@ -144,24 +142,24 @@ func update(c *gin.Context) {
 	}
 
 	// Binds and validates the model, and handles any possible errors
-	checkErr := controllers.BindAndValidateRequest(c, &survey)
+	checkErr := controllers.BindAndValidateRequest(c, &question)
 	if utils.LogError(checkErr) != nil {
 		utils.ConstantResponse(c, http.StatusBadRequest, utils.RequestError)
 		return
 	}
 
 	// Declares new properties
-	survey.UpdatedAt = time.Now()
+	question.UpdatedAt = time.Now()
 
 	// Decodes the structure into an update document
-	update, decodeErr := controllers.DecodeStruct(survey)
+	update, decodeErr := controllers.DecodeStruct(question)
 	if utils.LogError(decodeErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.RequestError)
 		return
 	}
 
 	// Updates a model in collection using filter and request data
-	updateErr := database.UpdateOne(database.SurveyCollection, id, update)
+	updateErr := database.UpdateOne(database.QuestionCollection, id, update)
 	if utils.LogError(updateErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.DatabaseUpdateError)
 		return
