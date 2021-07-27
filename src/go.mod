@@ -8,6 +8,6 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis/v7 v7.2.0
 	github.com/twinj/uuid v1.0.0
-	go.mongodb.org/mongo-driver v1.3.2
-	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+	go.mongodb.org/mongo-driver v1.5.1
+	golang.org/x/crypto v0.0.0-20200420201142-3c4aac89819a
 )
