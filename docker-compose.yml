@@ -23,9 +23,6 @@ services:
     api:
         build: '.'
         container_name: api
-        links:
-            - cache
-            - db
         depends_on: 
             - cache
             - db
