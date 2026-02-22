@@ -40,6 +40,5 @@ func InitRouter(r *gin.Engine) {
 	// Non-existing routes
 	r.NoRoute(func(c *gin.Context) {
 		utils.ConstantResponse(c, http.StatusNotFound, utils.NoRouteMessage)
-		return
 	})
 }

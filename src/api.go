@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"go_api_boilerplate/database"
 	"go_api_boilerplate/server"
+	"net/url"
 	"os"
 )
 
 func getConfig() map[string]string {
 	// Creates the configuration object
 	config := map[string]string{
+		"port":      os.Getenv("PORT"),
 		"mode":      os.Getenv("MODE"),
 		"dbUser":    os.Getenv("DB_USER"),
 		"dbPass":    os.Getenv("DB_PASS"),
@@ -29,9 +31,9 @@ func main() {
 	c := getConfig()
 
 	// Initializes the database and the cache
-	database.InitMongo(fmt.Sprintf("mongodb://%s:%s@%s:%s", c["dbUser"], c["dbPass"], c["dbHost"], c["dbPort"]), c["dbName"])
+	database.InitMongo(fmt.Sprintf("mongodb://%s:%s@%s:%s", url.QueryEscape(c["dbUser"]), url.QueryEscape(c["dbPass"]), c["dbHost"], c["dbPort"]), c["dbName"])
 	database.InitRedis(c["redisHost"], c["redisPort"], c["redisPass"])
 
 	// Initializes the server
-	server.InitServer(c["mode"])
+	server.InitServer(c["mode"], c["port"])
 }
