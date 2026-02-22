@@ -12,9 +12,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/twinj/uuid"
+	"github.com/google/uuid"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -25,11 +25,11 @@ func CreateToken(id primitive.ObjectID) (*models.Token, error) {
 
 	// Defines the access token meta-information
 	token.AccessExpires = time.Now().Add(time.Minute * 15).Unix()
-	token.AccessUUID = uuid.NewV4().String()
+	token.AccessUUID = uuid.New().String()
 
 	// Defines the refresh token meta-information
 	token.RefreshExpires = time.Now().Add(time.Hour * 24 * 7).Unix()
-	token.RefreshUUID = uuid.NewV4().String()
+	token.RefreshUUID = uuid.New().String()
 
 	// Creating the access token structure and signing it with JWT
 	accessClaims := jwt.MapClaims{}
@@ -103,7 +103,7 @@ func GetTokenData(r *http.Request) (*models.RedisAccess, error) {
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok || !token.Valid {
+	if !ok {
 		return nil, errors.New("invalid token claims")
 	}
 

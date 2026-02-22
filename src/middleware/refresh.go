@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -52,7 +52,7 @@ func GetRefreshTokenData(c *gin.Context) (string, primitive.ObjectID, error) {
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok || !token.Valid {
+	if !ok {
 		return "", primitive.NilObjectID, errors.New("invalid refresh token claims")
 	}
 

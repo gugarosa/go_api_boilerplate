@@ -1,5 +1,5 @@
 # Imports a GO alpine image
-FROM golang:1.14-alpine
+FROM golang:1.23-alpine
 
 # Sets environment variables necessary for building
 ENV GO111MODULE=on \

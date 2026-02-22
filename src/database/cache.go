@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"go_api_boilerplate/models"
@@ -10,7 +11,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/go-redis/redis/v7"
+	"github.com/redis/go-redis/v9"
 )
 
 // Redis client variable
@@ -27,7 +28,7 @@ func InitRedis(host string, port string, password string) {
 	})
 
 	// Pings client to check its connection and handles possible fatal error
-	_, pingErr := client.Ping().Result()
+	_, pingErr := client.Ping(context.Background()).Result()
 	utils.LogFatalError(pingErr)
 
 	log.Println("Redis client has been connected.")
@@ -35,20 +36,20 @@ func InitRedis(host string, port string, password string) {
 
 // CreateRedisAccess expects an ID and a Token model
 // to create the cached access
-func CreateRedisAccess(id primitive.ObjectID, t *models.Token) error {
+func CreateRedisAccess(ctx context.Context, id primitive.ObjectID, t *models.Token) error {
 	// Gathers system times
 	accessTime := time.Unix(t.AccessExpires, 0)
 	refreshTime := time.Unix(t.RefreshExpires, 0)
 	currentTime := time.Now()
 
 	// Creates access token and handles any possible errors
-	err := client.Set(t.AccessUUID, id.Hex(), accessTime.Sub(currentTime)).Err()
+	err := client.Set(ctx, t.AccessUUID, id.Hex(), accessTime.Sub(currentTime)).Err()
 	if err != nil {
 		return err
 	}
 
 	// Creates refresh token and handles any possible errors
-	err = client.Set(t.RefreshUUID, id.Hex(), refreshTime.Sub(currentTime)).Err()
+	err = client.Set(ctx, t.RefreshUUID, id.Hex(), refreshTime.Sub(currentTime)).Err()
 	if err != nil {
 		return err
 	}
@@ -58,9 +59,9 @@ func CreateRedisAccess(id primitive.ObjectID, t *models.Token) error {
 
 // GetRedisAccess expects a RedisAccess model
 // to return whether cached access is valid or not
-func GetRedisAccess(access *models.RedisAccess) error {
+func GetRedisAccess(ctx context.Context, access *models.RedisAccess) error {
 	// Gathers the access from Redis and handles any possible errors
-	_, err := client.Get(access.AccessUUID).Result()
+	_, err := client.Get(ctx, access.AccessUUID).Result()
 	if err != nil {
 		return err
 	}
@@ -70,9 +71,9 @@ func GetRedisAccess(access *models.RedisAccess) error {
 
 // DeleteRedisAccess expects a RedisAccess UUID
 // to remove the cached access
-func DeleteRedisAccess(uuid string) error {
+func DeleteRedisAccess(ctx context.Context, uuid string) error {
 	// Deletes the cached access from Redis and handles any possible errors
-	count, err := client.Del(uuid).Result()
+	count, err := client.Del(ctx, uuid).Result()
 	if err != nil {
 		return err
 	}

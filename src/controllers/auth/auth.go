@@ -49,7 +49,7 @@ func login(c *gin.Context) {
 		return
 	}
 
-	redisErr := database.CreateRedisAccess(dbUser.ID, token)
+	redisErr := database.CreateRedisAccess(c.Request.Context(), dbUser.ID, token)
 	if utils.LogError(redisErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.LoginError)
 		return
@@ -68,7 +68,7 @@ func refresh(c *gin.Context) {
 		return
 	}
 
-	redisErr := database.DeleteRedisAccess(refreshUUID)
+	redisErr := database.DeleteRedisAccess(c.Request.Context(), refreshUUID)
 	if utils.LogError(redisErr) != nil {
 		utils.ConstantResponse(c, http.StatusUnauthorized, utils.RefreshError)
 		return
@@ -80,7 +80,7 @@ func refresh(c *gin.Context) {
 		return
 	}
 
-	redisErr = database.CreateRedisAccess(userID, token)
+	redisErr = database.CreateRedisAccess(c.Request.Context(), userID, token)
 	if utils.LogError(redisErr) != nil {
 		utils.ConstantResponse(c, http.StatusInternalServerError, utils.RefreshError)
 		return
@@ -141,7 +141,7 @@ func logout(c *gin.Context) {
 		return
 	}
 
-	delErr := database.DeleteRedisAccess(token.AccessUUID)
+	delErr := database.DeleteRedisAccess(c.Request.Context(), token.AccessUUID)
 	if delErr != nil {
 		utils.ConstantResponse(c, http.StatusUnauthorized, utils.AuthError)
 		return

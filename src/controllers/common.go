@@ -26,7 +26,7 @@ func AuthRequest(c *gin.Context) error {
 	}
 
 	// Gets the cached access from Redis and handle any possible errors
-	err := database.GetRedisAccess(token)
+	err := database.GetRedisAccess(c.Request.Context(), token)
 	if err != nil {
 		return err
 	}
