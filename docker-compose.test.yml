@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+    test-cache:
+        image: redis
+        command: redis-server --requirepass testpass --appendonly yes
+    test-db:
+        image: mongo
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: testuser
+            MONGO_INITDB_ROOT_PASSWORD: testpass
+            MONGO_INITDB_DATABASE: test_db
+    test-runner:
+        build: '.'
+        depends_on:
+            - test-cache
+            - test-db
+        command: >
+            sh -c "
+                echo 'Waiting for services to be ready...' &&
+                sleep 5 &&
+                echo '=== Running Unit Tests ===' &&
+                go test -v -count=1 -timeout 60s ./utils/... ./middleware/... ./controllers/... &&
+                echo '=== Running Integration Tests ===' &&
+                go test -v -count=1 -timeout 300s ./tests/... &&
+                echo '=== Running Benchmarks ===' &&
+                go test -bench=. -benchtime=3s -run=^$ -timeout 120s ./tests/... &&
+                echo '=== All Tests Passed ==='
+            "
+        volumes:
+            - ./src:/src
+        environment:
+            PORT: 8081
+            MODE: test
+            DB_USER: testuser
+            DB_PASS: testpass
+            DB_NAME: test_db
+            DB_HOST: test-db
+            DB_PORT: 27017
+            REDIS_PASS: testpass
+            REDIS_HOST: test-cache
+            REDIS_PORT: 6379
+            ACCESS_SECRET: test_access_secret_key_for_testing
+            REFRESH_SECRET: test_refresh_secret_key_for_testing
