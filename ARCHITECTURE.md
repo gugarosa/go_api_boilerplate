@@ -22,7 +22,8 @@
 13. [Project Structure](#13-project-structure)
 14. [Design Decisions](#14-design-decisions)
 15. [Security Considerations](#15-security-considerations)
-16. [Extending the Boilerplate](#16-extending-the-boilerplate)
+16. [Testing](#16-testing)
+17. [Extending the Boilerplate](#17-extending-the-boilerplate)
 
 ---
 
@@ -541,6 +542,14 @@ go_api_boilerplate/
         ├── responses.go        # Standardized JSON response helpers
         └── validators/
             └── model.go        # Request binding and validation
+    └── tests/                  # Integration, E2E, and stress tests
+        ├── setup_test.go       # TestMain infrastructure and helpers
+        ├── auth_test.go        # Auth flow tests (register/login/refresh/logout)
+        ├── category_test.go    # Category CRUD tests
+        ├── tag_test.go         # Tag CRUD tests
+        ├── product_test.go     # Product CRUD tests with relations
+        ├── edge_cases_test.go  # Error path tests
+        └── stress_test.go      # Benchmarks and concurrent load tests
 ```
 
 ---
@@ -581,7 +590,60 @@ The boilerplate implements several security measures out of the box:
 
 ---
 
-## 16. Extending the Boilerplate
+## 16. Testing
+
+The project includes a comprehensive three-layer test suite using Go's standard `testing` package (no external test dependencies).
+
+### Layer 1: Unit Tests
+
+Located alongside source files (`*_test.go`), these tests run without external infrastructure:
+
+| File | Coverage |
+|------|----------|
+| `utils/logger_test.go` | LogError with nil, single, and multiple error arguments |
+| `utils/responses_test.go` | ConstantResponse and DynamicResponse JSON formatting |
+| `utils/validators/model_test.go` | JSON binding, validation rules, edge cases |
+| `middleware/authentication_test.go` | JWT creation, token extraction, verification, AuthGuard middleware |
+| `controllers/common_test.go` | BSON encode/decode round-trips, BindAndValidateRequest |
+
+### Layer 2: Integration / E2E Tests
+
+Located in `tests/`, these require MongoDB and Redis (provided by `docker-compose.test.yml`):
+
+| File | Coverage |
+|------|----------|
+| `tests/setup_test.go` | TestMain with DB/Redis init, shared helpers, collection cleanup |
+| `tests/auth_test.go` | Full auth lifecycle: register, login, refresh, logout, token invalidation |
+| `tests/category_test.go` | Category CRUD with auth, error paths (404, 400, 401) |
+| `tests/tag_test.go` | Tag CRUD with auth, error paths |
+| `tests/product_test.go` | Product CRUD with $lookup relations (tags + categories) |
+| `tests/edge_cases_test.go` | Invalid JSON, wrong content-type, malformed JWTs, non-existent routes |
+
+### Layer 3: Stress / Benchmark Tests
+
+Located in `tests/stress_test.go`, these validate performance and concurrency:
+
+- **BenchmarkListTags / BenchmarkListCategories** — Public endpoint throughput
+- **BenchmarkLogin** — Auth flow throughput
+- **BenchmarkCreateTag** — Authenticated write throughput
+- **TestConcurrentListRequests** — 100 simultaneous read goroutines
+- **TestConcurrentAuthenticatedWrites** — 50 simultaneous write goroutines
+- **TestConcurrentRegistrations** — 20 simultaneous user registrations
+- **TestConcurrentMixedReadWrite** — 50 reads + 50 writes simultaneously
+- **TestHighVolumeCreation** — Sequential creation of 100 items
+- **TestRapidLoginLogout** — 20 rapid login/logout cycles
+
+### Running Tests
+
+```bash
+docker-compose -f docker-compose.test.yml build
+docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+docker-compose -f docker-compose.test.yml down
+```
+
+---
+
+## 17. Extending the Boilerplate
 
 ### Adding a New Resource
 

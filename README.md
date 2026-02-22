@@ -176,6 +176,31 @@ No specific additional commands needed.
 
 ---
 
+### Testing
+
+We provide a comprehensive test suite covering unit tests, integration tests, and stress/benchmark tests. All tests run inside Docker containers.
+
+To run the complete test suite:
+
+```
+docker-compose -f docker-compose.test.yml build
+docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+```
+
+This will:
+1. Spin up isolated MongoDB and Redis containers for testing
+2. Run **unit tests** (logger, responses, validators, JWT middleware, BSON helpers)
+3. Run **integration/E2E tests** (auth flow, CRUD operations, edge cases)
+4. Run **stress benchmarks** (concurrent reads/writes, high volume, rapid cycles)
+
+To clean up after tests:
+
+```
+docker-compose -f docker-compose.test.yml down
+```
+
+---
+
 ## Support
 
 We know that we do our best, but it is inevitable to acknowledge that we make mistakes. If you ever need to report a bug, report a problem, talk to us, please do so! We will be available at our bests at this repository.
