@@ -20,7 +20,7 @@ COPY ./src .
 RUN go mod download
 
 # Installing reflex
-RUN go get github.com/cespare/reflex
+RUN CGO_ENABLED=0 go install github.com/cespare/reflex@latest
 
 # Running a reflex job for hot-reloading
 CMD ["reflex", "-c", "./reflex.conf"]
