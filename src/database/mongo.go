@@ -14,19 +14,19 @@ import (
 // InitMongo expects an url connection string and a database name
 // in order to start a MongoDB service
 func InitMongo(url string, database string) {
-	// Creates a new MongoDB client, sets context and connects
-	client, _ := mongo.NewClient(options.Client().ApplyURI(url))
+	// Creates a context with timeout for connection
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	_ = client.Connect(ctx)
-
-	// Closes the connection at the ending
 	defer cancel()
 
+	// Connects to MongoDB and handles any possible errors
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(url))
+	utils.LogFatalError(err)
+
 	// Pings client to check its connection and handles possible fatal error
-	pingErr := client.Ping(context.Background(), readpref.Primary())
+	pingErr := client.Ping(ctx, readpref.Primary())
 	utils.LogFatalError(pingErr)
 
-	// If no error has occured, just log that the client has been connected
+	// If no error has occurred, just log that the client has been connected
 	log.Println(utils.DatabaseClientConnected)
 
 	// Retrieves the database
@@ -34,6 +34,4 @@ func InitMongo(url string, database string) {
 
 	// Adds desired collections
 	SetCollections(dbObj)
-
-	return
 }
