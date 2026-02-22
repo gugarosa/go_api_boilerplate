@@ -2,8 +2,8 @@ package utils
 
 import "log"
 
-// LogError expects an dynamic number of error arguments,
-// logs and returns the first error occurence
+// LogError expects a dynamic number of error arguments,
+// logs and returns the first error occurrence
 func LogError(errs ...error) error {
 	for _, err := range errs {
 		if err != nil {
@@ -15,8 +15,8 @@ func LogError(errs ...error) error {
 	return nil
 }
 
-// LogFatalError expects an dynamic number of error arguments,
-// logs and exits the system on first error occurence
+// LogFatalError expects a dynamic number of error arguments,
+// logs and exits the system on first error occurrence
 func LogFatalError(errs ...error) error {
 	for _, err := range errs {
 		if err != nil {

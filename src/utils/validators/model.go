@@ -5,11 +5,13 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+// Reusable validator instance
+var validate = validator.New()
+
 // BindModel expects a context and a model
 // to bind a generic model to the required context
 func BindModel(c *gin.Context, model interface{}) error {
-	// Binds the model
-	err := c.ShouldBind(&model)
+	err := c.ShouldBindJSON(model)
 	if err != nil {
 		return err
 	}
@@ -17,11 +19,10 @@ func BindModel(c *gin.Context, model interface{}) error {
 	return nil
 }
 
-// ValidateModel expects a context and a model
-// to validate a request based on pre-defined validation rules
+// ValidateModel expects a model
+// to validate it based on pre-defined validation rules
 func ValidateModel(model interface{}) error {
-	// Validates the model
-	err := validator.New().Struct(model)
+	err := validate.Struct(model)
 	if err != nil {
 		return err
 	}

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go_api_boilerplate/models"
 	"go_api_boilerplate/utils"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -29,6 +30,7 @@ func InitRedis(host string, port string, password string) {
 	_, pingErr := client.Ping().Result()
 	utils.LogFatalError(pingErr)
 
+	log.Println("Redis client has been connected.")
 }
 
 // CreateRedisAccess expects an ID and a Token model
@@ -71,7 +73,10 @@ func GetRedisAccess(access *models.RedisAccess) error {
 func DeleteRedisAccess(uuid string) error {
 	// Deletes the cached access from Redis and handles any possible errors
 	count, err := client.Del(uuid).Result()
-	if err != nil || count == 0 {
+	if err != nil {
+		return err
+	}
+	if count == 0 {
 		return errors.New("redis: no keys in result")
 	}
 

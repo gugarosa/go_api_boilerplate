@@ -13,7 +13,7 @@ const DatabaseClientConnected string = "MongoDB client has been connected."
 const DatabaseDeleteError string = "Document could not be deleted."
 
 // DatabaseDeleteSuccess constant
-const DatabaseDeleteSuccess string = "Document succesfully deleted."
+const DatabaseDeleteSuccess string = "Document successfully deleted."
 
 // DatabaseFindError constant
 const DatabaseFindError string = "Document could not be found."
@@ -22,13 +22,13 @@ const DatabaseFindError string = "Document could not be found."
 const DatabaseInsertError string = "Document could not be inserted."
 
 // DatabaseInsertSuccess constant
-const DatabaseInsertSuccess string = "Document succesfully inserted."
+const DatabaseInsertSuccess string = "Document successfully inserted."
 
 // DatabaseUpdateError constant
 const DatabaseUpdateError string = "Document could not be updated."
 
 // DatabaseUpdateSuccess constant
-const DatabaseUpdateSuccess string = "Document succesfully updated."
+const DatabaseUpdateSuccess string = "Document successfully updated."
 
 // LoginError constant
 const LoginError string = "Login could not be performed."
