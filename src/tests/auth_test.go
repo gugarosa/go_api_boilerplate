@@ -5,8 +5,6 @@ import (
 	"testing"
 )
 
-// --- Register Tests ---
-
 func TestRegister_Success(t *testing.T) {
 	w := performRequest("POST", "/v1/register",
 		map[string]string{"email": "reg_success@test.com", "password": "password123"}, "")
@@ -58,8 +56,6 @@ func TestRegister_MissingFields(t *testing.T) {
 	}
 }
 
-// --- Login Tests ---
-
 func TestLogin_Success(t *testing.T) {
 	performRequest("POST", "/v1/register",
 		map[string]string{"email": "login_ok@test.com", "password": "password123"}, "")
@@ -109,8 +105,6 @@ func TestLogin_MissingFields(t *testing.T) {
 	}
 }
 
-// --- Refresh Tests ---
-
 func TestRefresh_Success(t *testing.T) {
 	_, refreshToken := registerAndLogin(t, "refresh_ok@test.com", "password123")
 
@@ -156,8 +150,6 @@ func TestRefresh_UsedTokenIsInvalidated(t *testing.T) {
 		t.Errorf("reuse refresh: expected 401, got %d", w.Code)
 	}
 }
-
-// --- Logout Tests ---
 
 func TestLogout_Success(t *testing.T) {
 	accessToken, _ := registerAndLogin(t, "logout_ok@test.com", "password123")

@@ -8,8 +8,6 @@ import (
 	"testing"
 )
 
-// --- Benchmarks ---
-
 // BenchmarkListTags benchmarks the public list endpoint (no auth).
 func BenchmarkListTags(b *testing.B) {
 	b.ResetTimer()
@@ -70,8 +68,6 @@ func BenchmarkCreateTag(b *testing.B) {
 		}
 	}
 }
-
-// --- Concurrent Load Tests ---
 
 // TestConcurrentListRequests fires many goroutines making read requests simultaneously.
 func TestConcurrentListRequests(t *testing.T) {
@@ -188,8 +184,6 @@ func TestConcurrentMixedReadWrite(t *testing.T) {
 		t.Errorf("%d/%d mixed read/write operations failed", failures, numOps*2)
 	}
 }
-
-// --- Volume Tests ---
 
 // TestHighVolumeCreation creates many items and verifies they all appear in list.
 func TestHighVolumeCreation(t *testing.T) {
